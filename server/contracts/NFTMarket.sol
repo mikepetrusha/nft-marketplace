@@ -128,13 +128,15 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
     }
 
     function buyItem(uint itemId) public payable nonReentrant() {
-        require(msg.value > idToMarketItem[itemId].price, "Incorrect price");
+        require(msg.value >= idToMarketItem[itemId].price, "Error in contract: Incorrect price");
+
 
         idToMarketItem[itemId].seller.transfer(msg.value);
-        transferListingTokens(address(this), msg.sender, 1, idToMarketItem[itemId]);
+        transferListingTokens(address(this),  msg.sender, 1, idToMarketItem[itemId]);
         idToMarketItem[itemId].owner = payable(msg.sender);
         idToMarketItem[itemId].sold = true;
         _itemsSold.increment();
+        emit MarketItemCreated(itemId, idToMarketItem[itemId].assetContract, idToMarketItem[itemId].tokenId, idToMarketItem[itemId].seller, msg.sender, msg.value, true);
     }
 
     function getTokenType(address _assetContract) internal view returns (TokenType tokenType) {
@@ -156,11 +158,11 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
         if (_listing.tokenType == TokenType.ERC1155) {
             IERC1155(_listing.assetContract).safeTransferFrom(_from, _to, _listing.tokenId, _quantity, "");
         } else if (_listing.tokenType == TokenType.ERC721) {
-            IERC721(_listing.assetContract).safeTransferFrom(_from, _to, _listing.tokenId, "");
+            IERC721(_listing.assetContract).transferFrom(_from, _to, _listing.tokenId);
         }
     }
 
-
+    //-------
     function fetchMarketItems() public view returns (MarketItem[] memory) {
         uint itemCount = _itemIds.current();
         uint unsoldItemCount = _itemIds.current() - _itemsSold.current();
@@ -186,7 +188,7 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
         uint currentIndex = 0;
 
         for(uint i = 0; i < totalItemCount; i++) {
-            if(idToMarketItem[i + 1].owner == msg.sender) {
+            if(idToMarketItem[i + 1].owner == msg.sender) { // TODO: replace with push to array 
                 itemCount += 1;
             }
         }
@@ -211,7 +213,7 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
         uint currentIndex = 0;
 
         for(uint i = 0; i < totalItemCount; i++) {
-            if(idToMarketItem[i + 1].seller == msg.sender) {
+            if(idToMarketItem[i + 1].seller == msg.sender) { // TODO: replace with push to array 
                 itemCount += 1;
             }
         }

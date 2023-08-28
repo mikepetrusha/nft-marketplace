@@ -1,22 +1,26 @@
 import { ethers } from "hardhat";
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+  // const NFTMarket = await ethers.deployContract("NFTMarket");
 
-  const lockedAmount = ethers.parseEther("0.001");
+  // await NFTMarket.waitForDeployment();
+  // const NFTMarketAddress = NFTMarket.getAddress();
+  // console.log("NFTMarket deployed to: ", NFTMarketAddress);
 
-  const lock = await ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
-  });
+  const NFTMarket = await ethers.getContractFactory("NFTMarket");
+  const market = await NFTMarket.deploy();
+  await market.waitForDeployment();
+  console.log("NFTMarket deployed to: ", market.target);
 
-  await lock.waitForDeployment();
+  const Contract721 = await ethers.getContractFactory("ERC721NFT");
+  const contract721 = await Contract721.deploy(market.target);
+  await contract721.waitForDeployment();
+  console.log("ContractERC721 deployed to: ", contract721.target);
 
-  console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
-  );
+  const Contract1155 = await ethers.getContractFactory("ERC1155NFT");
+  const contract1155 = await Contract1155.deploy(market.target);
+  await contract1155.waitForDeployment();
+  console.log("ContractERC1155 deployed to: ", contract1155.target);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

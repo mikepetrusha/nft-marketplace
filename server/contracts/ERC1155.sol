@@ -2,26 +2,30 @@
 
 pragma solidity ^0.8.9;
 
-import "../node_modules/@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "../node_modules/@openzeppelin/contracts/token/ERC1155/extensions/ERC1155URIStorage.sol";
 import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 
-contract NFT is ERC1155 {
+contract ERC1155NFT is ERC1155URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     address public contractAddress;
+
+    event tokenCreated (
+        uint indexed itemId
+    );
 
     constructor(address marketplaceAddress) ERC1155("") {
         contractAddress = marketplaceAddress;
     }
 
-    function createToken(string memory tokenURI) public returns (uint) {
+    function createToken(string memory tokenURI) public {
         _tokenIds.increment();
         uint newItemId = _tokenIds.current();
 
         _mint(msg.sender, newItemId, 1, "");
-        _setURI(tokenURI);
+        _setURI(newItemId, tokenURI);
         
         setApprovalForAll(contractAddress, true);
-        return newItemId;
+        emit tokenCreated(newItemId);
     }
 }
