@@ -39,7 +39,6 @@ export default function Home() {
 
     const items: IItem[] = await Promise.all(
       data.map(async (i: any) => {
-        console.log(Number(i.tokenType));
         let tokenUri;
 
         if (Number(i.tokenType) === 1) {
@@ -72,7 +71,6 @@ export default function Home() {
   };
 
   async function buyNft(nft: any) {
-    console.log(nft);
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.BrowserProvider(connection);
@@ -88,15 +86,6 @@ export default function Home() {
     const transaction = await contract.buyItem(nft.itemId, {
       value: ethers.parseEther(nft.price),
     });
-
-    contract.on(
-      "MarketItemCreated",
-      (itemId, nftContract, tokenId, seller, owner, price, sold) => {
-        console.log(
-          `MarketItemCreated is emitted. itemId: ${itemId}, nftContract: ${nftContract}, tokenId: ${tokenId}, seller: ${seller}, owner: ${owner}, price: ${price}, sold: ${sold}`
-        );
-      }
-    );
 
     await transaction.wait();
     loadNFTs();

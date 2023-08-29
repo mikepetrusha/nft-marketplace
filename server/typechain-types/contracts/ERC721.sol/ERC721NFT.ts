@@ -27,6 +27,7 @@ export interface ERC721NFTInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "approve"
+      | "approveForMarketplace"
       | "balanceOf"
       | "contractAddress"
       | "createToken"
@@ -56,6 +57,10 @@ export interface ERC721NFTInterface extends Interface {
   encodeFunctionData(
     functionFragment: "approve",
     values: [AddressLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "approveForMarketplace",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "balanceOf",
@@ -106,6 +111,10 @@ export interface ERC721NFTInterface extends Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "approveForMarketplace",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "contractAddress",
@@ -296,6 +305,12 @@ export interface ERC721NFT extends BaseContract {
     "nonpayable"
   >;
 
+  approveForMarketplace: TypedContractMethod<
+    [tokenId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
   balanceOf: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
 
   contractAddress: TypedContractMethod<[], [string], "view">;
@@ -364,6 +379,9 @@ export interface ERC721NFT extends BaseContract {
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "approveForMarketplace"
+  ): TypedContractMethod<[tokenId: BigNumberish], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "balanceOf"
   ): TypedContractMethod<[owner: AddressLike], [bigint], "view">;

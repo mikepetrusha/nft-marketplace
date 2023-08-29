@@ -63,6 +63,8 @@ export default function CreateItem() {
       await transaction.wait();
 
       const price = ethers.parseUnits(formInput.price, "ether");
+      transaction = await contract.approveForMarketplace(tokenId);
+      await transaction.wait();
 
       contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
 

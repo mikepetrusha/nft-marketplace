@@ -9,7 +9,6 @@ import ERC721NFT from "../../../server/artifacts/contracts/ERC721.sol/ERC721NFT.
 import ERC1155NFT from "../../../server/artifacts/contracts/ERC1155.sol/ERC1155NFT.json";
 
 export default function CreateItem() {
-  //   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [formInput, updateFormInput] = useState({
     name: "",
     descriprion: "",
@@ -66,6 +65,9 @@ export default function CreateItem() {
 
       const price = ethers.parseUnits(formInput.price, "ether");
 
+      transaction = await contract.approveForMarketplace(tokenId);
+      await transaction.wait();
+
       contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
 
       transaction = await contract.listItem(erc721address, tokenId, price);
@@ -107,8 +109,6 @@ export default function CreateItem() {
         />
 
         <input type="file" name="Asset" className="my-4" onChange={onChange} />
-
-        {/* {fileUrl && <img className="rounded mt-4" width="350" src={fileUrl} />} */}
 
         <button
           onClick={createItem}

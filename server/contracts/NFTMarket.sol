@@ -18,10 +18,10 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
     Counters.Counter private _itemIds;
     Counters.Counter private _itemsSold;
 
-    address payable owner;
+    address owner;
 
     constructor() {
-        owner = payable(msg.sender);
+        owner = msg.sender;
     }
 
     enum TokenType {
@@ -33,8 +33,8 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
         uint itemId;
         address assetContract;
         uint256 tokenId;
-        address payable seller;
-        address payable owner;
+        address seller;
+        address owner;
         uint price;
         bool sold;
         TokenType tokenType;
@@ -121,8 +121,6 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
             false,
             tokenType
         );
-        
-        transferListingTokens(msg.sender, address(this), 1, idToMarketItem[itemId]);
 
         emit MarketItemCreated(itemId, nftContract, tokenId, msg.sender, address(0), price, false);
     }
@@ -131,8 +129,8 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
         require(msg.value >= idToMarketItem[itemId].price, "Error in contract: Incorrect price");
 
 
-        idToMarketItem[itemId].seller.transfer(msg.value);
-        transferListingTokens(address(this),  msg.sender, 1, idToMarketItem[itemId]);
+        payable(idToMarketItem[itemId].seller).transfer(msg.value);
+        transferListingTokens(idToMarketItem[itemId].seller,  msg.sender, 1, idToMarketItem[itemId]);
         idToMarketItem[itemId].owner = payable(msg.sender);
         idToMarketItem[itemId].sold = true;
         _itemsSold.increment();
@@ -158,7 +156,7 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
         if (_listing.tokenType == TokenType.ERC1155) {
             IERC1155(_listing.assetContract).safeTransferFrom(_from, _to, _listing.tokenId, _quantity, "");
         } else if (_listing.tokenType == TokenType.ERC721) {
-            IERC721(_listing.assetContract).transferFrom(_from, _to, _listing.tokenId);
+            IERC721(_listing.assetContract).safeTransferFrom(_from, _to, _listing.tokenId);
         }
     }
 
@@ -188,7 +186,7 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
         uint currentIndex = 0;
 
         for(uint i = 0; i < totalItemCount; i++) {
-            if(idToMarketItem[i + 1].owner == msg.sender) { // TODO: replace with push to array 
+            if(idToMarketItem[i + 1].owner == msg.sender) { 
                 itemCount += 1;
             }
         }
@@ -213,7 +211,7 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
         uint currentIndex = 0;
 
         for(uint i = 0; i < totalItemCount; i++) {
-            if(idToMarketItem[i + 1].seller == msg.sender) { // TODO: replace with push to array 
+            if(idToMarketItem[i + 1].seller == msg.sender) { 
                 itemCount += 1;
             }
         }

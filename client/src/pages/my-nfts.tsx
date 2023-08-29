@@ -50,7 +50,7 @@ export default function MyNFTs() {
         } else {
           tokenUri = await tokenContractERC1155.uri(i.tokenId);
         }
-        // const tokenUri = await tokenContract.tokenURI(i.tokenId);
+
         const meta = await axios.get(ipfsToHTTPS(tokenUri));
         let price = ethers.formatUnits(i.price.toString(), "ether");
         let item = {

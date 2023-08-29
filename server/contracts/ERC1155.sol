@@ -24,8 +24,12 @@ contract ERC1155NFT is ERC1155URIStorage {
 
         _mint(msg.sender, newItemId, 1, "");
         _setURI(newItemId, tokenURI);
-        
-        setApprovalForAll(contractAddress, true);
         emit tokenCreated(newItemId);
+    }
+
+    function approveForMarketplace(uint256 tokenId) public {
+        require(balanceOf(msg.sender, tokenId) > 0, "Not owner of the token");
+
+        setApprovalForAll(contractAddress, true);
     }
 }

@@ -26,6 +26,7 @@ import type {
 export interface ERC1155NFTInterface extends Interface {
   getFunction(
     nameOrSignature:
+      | "approveForMarketplace"
       | "balanceOf"
       | "balanceOfBatch"
       | "contractAddress"
@@ -47,6 +48,10 @@ export interface ERC1155NFTInterface extends Interface {
       | "tokenCreated"
   ): EventFragment;
 
+  encodeFunctionData(
+    functionFragment: "approveForMarketplace",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "balanceOf",
     values: [AddressLike, BigNumberish]
@@ -88,6 +93,10 @@ export interface ERC1155NFTInterface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "uri", values: [BigNumberish]): string;
 
+  decodeFunctionResult(
+    functionFragment: "approveForMarketplace",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "balanceOfBatch",
@@ -270,6 +279,12 @@ export interface ERC1155NFT extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  approveForMarketplace: TypedContractMethod<
+    [tokenId: BigNumberish],
+    [void],
+    "nonpayable"
+  >;
+
   balanceOf: TypedContractMethod<
     [account: AddressLike, id: BigNumberish],
     [bigint],
@@ -334,6 +349,9 @@ export interface ERC1155NFT extends BaseContract {
     key: string | FunctionFragment
   ): T;
 
+  getFunction(
+    nameOrSignature: "approveForMarketplace"
+  ): TypedContractMethod<[tokenId: BigNumberish], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "balanceOf"
   ): TypedContractMethod<
