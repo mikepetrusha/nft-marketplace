@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/contracts/ERC1155.sol": {
-      "lastModificationDate": 1693288707286,
-      "contentHash": "67b65a5e06a8a50c63e8a2c660cbd934",
+      "lastModificationDate": 1693407686070,
+      "contentHash": "150d34a78aa4c11bc1a102d235a06842",
       "sourceName": "contracts/ERC1155.sol",
       "solcConfig": {
         "version": "0.8.19",
@@ -192,41 +192,6 @@
         "ERC1155"
       ]
     },
-    "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol": {
-      "lastModificationDate": 1691357170159,
-      "contentHash": "9488ebd4daacfee8ad04811600d7d061",
-      "sourceName": "@openzeppelin/contracts/utils/math/SignedMath.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "SignedMath"
-      ]
-    },
     "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/node_modules/@openzeppelin/contracts/utils/math/Math.sol": {
       "lastModificationDate": 1691357169889,
       "contentHash": "fe63409d8a06818b926cf89e0ea88b1b",
@@ -260,6 +225,41 @@
       ],
       "artifacts": [
         "Math"
+      ]
+    },
+    "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/node_modules/@openzeppelin/contracts/utils/math/SignedMath.sol": {
+      "lastModificationDate": 1691357170159,
+      "contentHash": "9488ebd4daacfee8ad04811600d7d061",
+      "sourceName": "@openzeppelin/contracts/utils/math/SignedMath.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SignedMath"
       ]
     },
     "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/node_modules/@openzeppelin/contracts/utils/Address.sol": {
@@ -775,10 +775,10 @@
         "IERC721Receiver"
       ]
     },
-    "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol": {
-      "lastModificationDate": 1691357168314,
-      "contentHash": "de368c6a87e159c86544ae5041b58cf3",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+    "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/node_modules/@openzeppelin/contracts/access/AccessControl.sol": {
+      "lastModificationDate": 1691357166945,
+      "contentHash": "a2b1ec38a8dad325a596f926890772b8",
+      "sourceName": "@openzeppelin/contracts/access/AccessControl.sol",
       "solcConfig": {
         "version": "0.8.19",
         "settings": {
@@ -803,103 +803,22 @@
         }
       },
       "imports": [
-        "../ERC721.sol",
-        "../../../interfaces/IERC4906.sol"
+        "./IAccessControl.sol",
+        "../utils/Context.sol",
+        "../utils/Strings.sol",
+        "../utils/introspection/ERC165.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
       ],
       "artifacts": [
-        "ERC721URIStorage"
+        "AccessControl"
       ]
     },
-    "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/contracts/ERC721.sol": {
-      "lastModificationDate": 1693288589349,
-      "contentHash": "e9e79d431003f759e1dcd5b6ff710fcc",
-      "sourceName": "contracts/ERC721.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        "../node_modules/@openzeppelin/contracts/utils/Counters.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.9"
-      ],
-      "artifacts": [
-        "ERC721NFT"
-      ]
-    },
-    "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/contracts/NFTMarket.sol": {
-      "lastModificationDate": 1693288610026,
-      "contentHash": "f391f2c8af8ad236af9084523769a5f7",
-      "sourceName": "contracts/NFTMarket.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../node_modules/@openzeppelin/contracts/token/ERC1155/IERC1155.sol",
-        "../node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol",
-        "../node_modules/@openzeppelin/contracts/utils/Counters.sol",
-        "../node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
-        "../node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
-        "../node_modules/@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol",
-        "../node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol",
-        "../node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.9"
-      ],
-      "artifacts": [
-        "NFTMarket"
-      ]
-    },
-    "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol": {
-      "lastModificationDate": 1691357170044,
-      "contentHash": "1535f8c0c68463f8c1b5239f7584e71f",
-      "sourceName": "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+    "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/node_modules/@openzeppelin/contracts/access/IAccessControl.sol": {
+      "lastModificationDate": 1691357168458,
+      "contentHash": "57c84298234411cea19c7c284d86be8b",
+      "sourceName": "@openzeppelin/contracts/access/IAccessControl.sol",
       "solcConfig": {
         "version": "0.8.19",
         "settings": {
@@ -928,7 +847,44 @@
         "^0.8.0"
       ],
       "artifacts": [
-        "ReentrancyGuard"
+        "IAccessControl"
+      ]
+    },
+    "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/node_modules/@openzeppelin/contracts/access/IAccessControlEnumerable.sol": {
+      "lastModificationDate": 1691357168489,
+      "contentHash": "4e71cc90682e109e999ce2bd329f6572",
+      "sourceName": "@openzeppelin/contracts/access/IAccessControlEnumerable.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IAccessControl.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IAccessControlEnumerable"
       ]
     },
     "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol": {
@@ -1005,10 +961,10 @@
         "EnumerableSet"
       ]
     },
-    "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/node_modules/@openzeppelin/contracts/access/IAccessControlEnumerable.sol": {
-      "lastModificationDate": 1691357168489,
-      "contentHash": "4e71cc90682e109e999ce2bd329f6572",
-      "sourceName": "@openzeppelin/contracts/access/IAccessControlEnumerable.sol",
+    "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/contracts/NFTMarket.sol": {
+      "lastModificationDate": 1693504051564,
+      "contentHash": "92d471d805489c5a4fe32170fa3f1c93",
+      "sourceName": "contracts/NFTMarket.sol",
       "solcConfig": {
         "version": "0.8.19",
         "settings": {
@@ -1033,59 +989,26 @@
         }
       },
       "imports": [
-        "./IAccessControl.sol"
+        "../node_modules/@openzeppelin/contracts/token/ERC1155/IERC1155.sol",
+        "../node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol",
+        "../node_modules/@openzeppelin/contracts/utils/Counters.sol",
+        "../node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "../node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
+        "../node_modules/@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol",
+        "../node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol",
+        "../node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol"
       ],
       "versionPragmas": [
-        "^0.8.0"
+        "^0.8.9"
       ],
       "artifacts": [
-        "IAccessControlEnumerable"
+        "NFTMarket"
       ]
     },
-    "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/node_modules/@openzeppelin/contracts/access/AccessControl.sol": {
-      "lastModificationDate": 1691357166945,
-      "contentHash": "a2b1ec38a8dad325a596f926890772b8",
-      "sourceName": "@openzeppelin/contracts/access/AccessControl.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./IAccessControl.sol",
-        "../utils/Context.sol",
-        "../utils/Strings.sol",
-        "../utils/introspection/ERC165.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "AccessControl"
-      ]
-    },
-    "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/node_modules/@openzeppelin/contracts/access/IAccessControl.sol": {
-      "lastModificationDate": 1691357168458,
-      "contentHash": "57c84298234411cea19c7c284d86be8b",
-      "sourceName": "@openzeppelin/contracts/access/IAccessControl.sol",
+    "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol": {
+      "lastModificationDate": 1691357170044,
+      "contentHash": "1535f8c0c68463f8c1b5239f7584e71f",
+      "sourceName": "@openzeppelin/contracts/security/ReentrancyGuard.sol",
       "solcConfig": {
         "version": "0.8.19",
         "settings": {
@@ -1114,7 +1037,84 @@
         "^0.8.0"
       ],
       "artifacts": [
-        "IAccessControl"
+        "ReentrancyGuard"
+      ]
+    },
+    "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/contracts/ERC721.sol": {
+      "lastModificationDate": 1693407686070,
+      "contentHash": "88c063b1e0f13f9bbc22d93e37c7c0f6",
+      "sourceName": "contracts/ERC721.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol",
+        "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+        "../node_modules/@openzeppelin/contracts/utils/Counters.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "ERC721NFT"
+      ]
+    },
+    "/Users/mikepetrusha/Desktop/TypeScriptProjects/blockchain-projects/marketplace/server/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol": {
+      "lastModificationDate": 1691357168314,
+      "contentHash": "de368c6a87e159c86544ae5041b58cf3",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../ERC721.sol",
+        "../../../interfaces/IERC4906.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC721URIStorage"
       ]
     }
   }

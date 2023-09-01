@@ -27,11 +27,5 @@ contract ERC721NFT is ERC721URIStorage {
         _setTokenURI(newItemId, tokenURI);
         emit tokenCreated(newItemId);
     }
-
-    function approveForMarketplace(uint256 tokenId) public {
-        require(_isApprovedOrOwner(msg.sender, tokenId), "Not approved or owner");
-
-        approve(contractAddress, tokenId);
-    }
 }
 

@@ -12,6 +12,7 @@ export default function CreateItem() {
     name: "",
     descriprion: "",
     price: "",
+    amount: "",
   });
 
   const router = useRouter();
@@ -54,7 +55,10 @@ export default function CreateItem() {
 
     let contract = new ethers.Contract(erc1155address, ERC1155NFT.abi, signer);
 
-    let transaction = await contract.createToken(json.uri);
+    let transaction = await contract.createToken(
+      json.uri,
+      Number(formInput.amount)
+    );
 
     contract.on("tokenCreated", async (itemId) => {
       console.log("Event is working");
@@ -63,12 +67,17 @@ export default function CreateItem() {
       await transaction.wait();
 
       const price = ethers.parseUnits(formInput.price, "ether");
-      transaction = await contract.approveForMarketplace(tokenId);
+      transaction = await contract.setApprovalForAll(nftmarketaddress, true);
       await transaction.wait();
 
       contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
 
-      transaction = await contract.listItem(erc1155address, tokenId, price);
+      transaction = await contract.listItem(
+        erc1155address,
+        tokenId,
+        price,
+        Number(formInput.amount)
+      );
       await transaction.wait();
 
       router.push("/");
@@ -103,6 +112,15 @@ export default function CreateItem() {
           className="mt-8 border rounded p-4"
           onChange={(e) =>
             updateFormInput({ ...formInput, price: e.target.value })
+          }
+        />
+
+        <input
+          type="text"
+          placeholder="Amount"
+          className="mt-8 border rounded p-4"
+          onChange={(e) =>
+            updateFormInput({ ...formInput, amount: e.target.value })
           }
         />
 

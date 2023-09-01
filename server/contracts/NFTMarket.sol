@@ -38,6 +38,7 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
         uint price;
         bool sold;
         TokenType tokenType;
+        uint amount;
     }
 
     mapping (uint => MarketItem) private idToMarketItem;
@@ -49,7 +50,9 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
         address seller,
         address owner,
         uint price,
-        bool sold
+        bool sold,
+        TokenType TokenType,
+        uint amount
     );
 
 
@@ -103,7 +106,7 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
 
 
 
-    function listItem(address nftContract, uint tokenId, uint price) public payable nonReentrant() {
+    function listItem(address nftContract, uint tokenId, uint price, uint amount) public payable nonReentrant() {
         TokenType tokenType = getTokenType(nftContract);
 
         require(price > 0, "Price must be greater than 0");
@@ -119,22 +122,23 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
             payable(address(0)),
             price,
             false,
-            tokenType
+            tokenType,
+            amount
         );
 
-        emit MarketItemCreated(itemId, nftContract, tokenId, msg.sender, address(0), price, false);
+        emit MarketItemCreated(itemId, nftContract, tokenId, msg.sender, address(0), price, false, tokenType, amount);
     }
 
-    function buyItem(uint itemId) public payable nonReentrant() {
+    function buyItem(uint itemId, uint amount) public payable nonReentrant() {
         require(msg.value >= idToMarketItem[itemId].price, "Error in contract: Incorrect price");
 
 
         payable(idToMarketItem[itemId].seller).transfer(msg.value);
-        transferListingTokens(idToMarketItem[itemId].seller,  msg.sender, 1, idToMarketItem[itemId]);
+        transferListingTokens(idToMarketItem[itemId].seller,  msg.sender, amount, idToMarketItem[itemId]);
         idToMarketItem[itemId].owner = payable(msg.sender);
         idToMarketItem[itemId].sold = true;
         _itemsSold.increment();
-        emit MarketItemCreated(itemId, idToMarketItem[itemId].assetContract, idToMarketItem[itemId].tokenId, idToMarketItem[itemId].seller, msg.sender, msg.value, true);
+        emit MarketItemCreated(itemId, idToMarketItem[itemId].assetContract, idToMarketItem[itemId].tokenId, idToMarketItem[itemId].seller, msg.sender, msg.value, true, idToMarketItem[itemId].tokenType, idToMarketItem[itemId].amount);
     }
 
     function getTokenType(address _assetContract) internal view returns (TokenType tokenType) {

@@ -60,6 +60,7 @@ export default function Home() {
           name: meta.data.name,
           description: meta.data.description,
           tokenType: Number(i.tokenType),
+          amount: Number(i.amount),
         };
 
         return item;
@@ -83,7 +84,7 @@ export default function Home() {
       signer
     );
 
-    const transaction = await contract.buyItem(nft.itemId, {
+    const transaction = await contract.buyItem(nft.itemId, nft.amount, {
       value: ethers.parseEther(nft.price),
     });
 
@@ -113,12 +114,17 @@ export default function Home() {
                   {nft.name}
                 </p>
                 <div style={{ overflow: "hidden" }}>
-                  <p className="text-gray-400">{nft.description}</p>
+                  <p className="text-gray-400">
+                    Description: {nft.description}
+                  </p>
                 </div>
                 <div style={{ overflow: "hidden" }}>
                   <p className="text-gray-400">
                     Token Type: {nft.tokenType === 0 ? "ERC1155" : "ERC721"}
                   </p>
+                </div>
+                <div style={{ overflow: "hidden" }}>
+                  <p className="text-gray-400">Amount: {nft.amount}</p>
                 </div>
               </div>
               <div className="p-4 bg-black">

@@ -33,6 +33,7 @@ export declare namespace NFTMarket {
     price: BigNumberish;
     sold: boolean;
     tokenType: BigNumberish;
+    amount: BigNumberish;
   };
 
   export type MarketItemStructOutput = [
@@ -43,7 +44,8 @@ export declare namespace NFTMarket {
     owner: string,
     price: bigint,
     sold: boolean,
-    tokenType: bigint
+    tokenType: bigint,
+    amount: bigint
   ] & {
     itemId: bigint;
     assetContract: string;
@@ -53,6 +55,7 @@ export declare namespace NFTMarket {
     price: bigint;
     sold: boolean;
     tokenType: bigint;
+    amount: bigint;
   };
 }
 
@@ -92,7 +95,7 @@ export interface NFTMarketInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "buyItem",
-    values: [BigNumberish]
+    values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "fetchListedItems",
@@ -128,7 +131,7 @@ export interface NFTMarketInterface extends Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "listItem",
-    values: [AddressLike, BigNumberish, BigNumberish]
+    values: [AddressLike, BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "onERC1155BatchReceived",
@@ -224,7 +227,9 @@ export namespace MarketItemCreatedEvent {
     seller: AddressLike,
     owner: AddressLike,
     price: BigNumberish,
-    sold: boolean
+    sold: boolean,
+    TokenType: BigNumberish,
+    amount: BigNumberish
   ];
   export type OutputTuple = [
     itemId: bigint,
@@ -233,7 +238,9 @@ export namespace MarketItemCreatedEvent {
     seller: string,
     owner: string,
     price: bigint,
-    sold: boolean
+    sold: boolean,
+    TokenType: bigint,
+    amount: bigint
   ];
   export interface OutputObject {
     itemId: bigint;
@@ -243,6 +250,8 @@ export namespace MarketItemCreatedEvent {
     owner: string;
     price: bigint;
     sold: boolean;
+    TokenType: bigint;
+    amount: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -353,7 +362,11 @@ export interface NFTMarket extends BaseContract {
 
   DEFAULT_ADMIN_ROLE: TypedContractMethod<[], [string], "view">;
 
-  buyItem: TypedContractMethod<[itemId: BigNumberish], [void], "payable">;
+  buyItem: TypedContractMethod<
+    [itemId: BigNumberish, amount: BigNumberish],
+    [void],
+    "payable"
+  >;
 
   fetchListedItems: TypedContractMethod<
     [],
@@ -396,7 +409,12 @@ export interface NFTMarket extends BaseContract {
   >;
 
   listItem: TypedContractMethod<
-    [nftContract: AddressLike, tokenId: BigNumberish, price: BigNumberish],
+    [
+      nftContract: AddressLike,
+      tokenId: BigNumberish,
+      price: BigNumberish,
+      amount: BigNumberish
+    ],
     [void],
     "payable"
   >;
@@ -458,7 +476,11 @@ export interface NFTMarket extends BaseContract {
   ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "buyItem"
-  ): TypedContractMethod<[itemId: BigNumberish], [void], "payable">;
+  ): TypedContractMethod<
+    [itemId: BigNumberish, amount: BigNumberish],
+    [void],
+    "payable"
+  >;
   getFunction(
     nameOrSignature: "fetchListedItems"
   ): TypedContractMethod<[], [NFTMarket.MarketItemStructOutput[]], "view">;
@@ -498,7 +520,12 @@ export interface NFTMarket extends BaseContract {
   getFunction(
     nameOrSignature: "listItem"
   ): TypedContractMethod<
-    [nftContract: AddressLike, tokenId: BigNumberish, price: BigNumberish],
+    [
+      nftContract: AddressLike,
+      tokenId: BigNumberish,
+      price: BigNumberish,
+      amount: BigNumberish
+    ],
     [void],
     "payable"
   >;
@@ -583,7 +610,7 @@ export interface NFTMarket extends BaseContract {
   >;
 
   filters: {
-    "MarketItemCreated(uint256,address,uint256,address,address,uint256,bool)": TypedContractEvent<
+    "MarketItemCreated(uint256,address,uint256,address,address,uint256,bool,uint8,uint256)": TypedContractEvent<
       MarketItemCreatedEvent.InputTuple,
       MarketItemCreatedEvent.OutputTuple,
       MarketItemCreatedEvent.OutputObject
