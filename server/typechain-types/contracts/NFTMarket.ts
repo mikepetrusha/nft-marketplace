@@ -79,6 +79,7 @@ export interface NFTMarketInterface extends Interface {
       | "renounceRole"
       | "revokeRole"
       | "supportsInterface"
+      | "updateListing"
   ): FunctionFragment;
 
   getEvent(
@@ -163,6 +164,10 @@ export interface NFTMarketInterface extends Interface {
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
+  encodeFunctionData(
+    functionFragment: "updateListing",
+    values: [BigNumberish, BigNumberish, BigNumberish]
+  ): string;
 
   decodeFunctionResult(
     functionFragment: "DEFAULT_ADMIN_ROLE",
@@ -215,6 +220,10 @@ export interface NFTMarketInterface extends Interface {
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateListing",
     data: BytesLike
   ): Result;
 }
@@ -467,6 +476,12 @@ export interface NFTMarket extends BaseContract {
     "view"
   >;
 
+  updateListing: TypedContractMethod<
+    [itemId: BigNumberish, price: BigNumberish, amount: BigNumberish],
+    [void],
+    "payable"
+  >;
+
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
@@ -579,6 +594,13 @@ export interface NFTMarket extends BaseContract {
   getFunction(
     nameOrSignature: "supportsInterface"
   ): TypedContractMethod<[interfaceId: BytesLike], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "updateListing"
+  ): TypedContractMethod<
+    [itemId: BigNumberish, price: BigNumberish, amount: BigNumberish],
+    [void],
+    "payable"
+  >;
 
   getEvent(
     key: "MarketItemCreated"

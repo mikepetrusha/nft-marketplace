@@ -8,6 +8,7 @@ import NFTMarket from "../../../server/artifacts/contracts/NFTMarket.sol/NFTMark
 import ERC1155NFT from "../../../server/artifacts/contracts/ERC1155.sol/ERC1155NFT.json";
 
 export default function CreateItem() {
+  const [loadingState, setLoadingState] = useState("loaded");
   const [formInput, updateFormInput] = useState({
     name: "",
     descriprion: "",
@@ -39,6 +40,7 @@ export default function CreateItem() {
   };
 
   const createSale = async () => {
+    setLoadingState("not-loaded");
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.BrowserProvider(connection);
@@ -80,10 +82,9 @@ export default function CreateItem() {
       );
       await transaction.wait();
 
+      setLoadingState("loaded");
       router.push("/");
     });
-
-    console.log("Loading... ");
   };
 
   return (
@@ -92,15 +93,15 @@ export default function CreateItem() {
         <input
           type="text"
           placeholder="Name"
-          className="mt-8 border rounded p-4"
+          className="mt-8 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-6 text-md outline-none border-gray-200"
           onChange={(e) =>
             updateFormInput({ ...formInput, name: e.target.value })
           }
         />
 
-        <textarea
+        <input
           placeholder="Description"
-          className="mt-8 border rounded p-4"
+          className="mt-8 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-6 text-md outline-none border-gray-200"
           onChange={(e) =>
             updateFormInput({ ...formInput, descriprion: e.target.value })
           }
@@ -109,7 +110,7 @@ export default function CreateItem() {
         <input
           type="text"
           placeholder="Price"
-          className="mt-8 border rounded p-4"
+          className="mt-8 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-6 text-md outline-none border-gray-200"
           onChange={(e) =>
             updateFormInput({ ...formInput, price: e.target.value })
           }
@@ -118,7 +119,7 @@ export default function CreateItem() {
         <input
           type="text"
           placeholder="Amount"
-          className="mt-8 border rounded p-4"
+          className="mt-8 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-6 text-md outline-none border-gray-200"
           onChange={(e) =>
             updateFormInput({ ...formInput, amount: e.target.value })
           }
@@ -128,9 +129,9 @@ export default function CreateItem() {
 
         <button
           onClick={createItem}
-          className="font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg"
+          className="mt-4 block w-full rounded-md bg-indigo-600 px-3.5 py-4 text-center text-sm font-bold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
-          Create NFT
+          {loadingState == "loaded" ? "Create NFT" : "Creating..."}
         </button>
       </div>
     </div>

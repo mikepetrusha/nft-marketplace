@@ -24,6 +24,7 @@ export default function MyNFTs() {
   }, []);
 
   const listNFT = async (nft: any) => {
+    setLoadingState("not-loaded");
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.BrowserProvider(connection);
@@ -40,9 +41,14 @@ export default function MyNFTs() {
 
       contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
 
-      transaction = await contract.listItem(
-        erc721address,
-        tokenId,
+      console.log(
+        nft,
+        ethers.parseUnits(formInput.price, "ether"),
+        formInput.amount
+      );
+
+      transaction = await contract.updateListing(
+        nft.itemId,
         ethers.parseUnits(formInput.price, "ether"),
         1
       );
@@ -61,33 +67,6 @@ export default function MyNFTs() {
 
       contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
 
-      contract.on(
-        "MarketItemCreated",
-        (
-          itemId,
-          assetContract,
-          tokenId,
-          seller,
-          owner,
-          price,
-          sold,
-          tokenType,
-          amount
-        ) => {
-          console.log(
-            itemId,
-            assetContract,
-            tokenId,
-            seller,
-            owner,
-            price,
-            sold,
-            tokenType,
-            amount
-          );
-        }
-      );
-
       transaction = await contract.listItem(
         erc1155address,
         tokenId,
@@ -97,9 +76,8 @@ export default function MyNFTs() {
       await transaction.wait();
     }
 
+    setLoadingState("loaded");
     router.push("/");
-
-    console.log("Loading... ");
   };
 
   const loadNfts = async () => {
@@ -130,9 +108,12 @@ export default function MyNFTs() {
       data.map(async (i: any) => {
         let tokenUri;
         let amount;
+        let owner;
 
         if (Number(i.tokenType) === 1) {
           tokenUri = await tokenContractERC721.tokenURI(i.tokenId);
+          owner = await tokenContractERC721.ownerOf(i.tokenId);
+          console.log(owner);
           amount = 1;
         } else {
           tokenUri = await tokenContractERC1155.uri(i.tokenId);
@@ -143,6 +124,7 @@ export default function MyNFTs() {
         }
         const meta = await axios.get(ipfsToHTTPS(tokenUri));
         let item = {
+          itemId: i.itemId,
           tokenId: Number(i.tokenId),
           owner: i.owner,
           image: ipfsToHTTPS(meta.data.image),
@@ -167,7 +149,10 @@ export default function MyNFTs() {
       <div className="px-4" style={{ maxWidth: "1600px" }}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
           {nfts.map((nft, i) => (
-            <div className="border shadow rounded-xl overflow-hidden" key={i}>
+            <div
+              className="border overflow-hidden rounded-lg bg-white shadow-xl ring-1 ring-slate-900/5"
+              key={i}
+            >
               <img
                 className="h-80 w-full object-cover object-center"
                 src={nft.image}
@@ -190,6 +175,12 @@ export default function MyNFTs() {
                 </div>
                 <div style={{ overflow: "hidden" }}>
                   <p className="text-gray-400">Amount: {nft.amount}</p>
+                </div>
+                <div style={{ overflow: "hidden" }}>
+                  <p className="text-gray-400">
+                    Owner:{" "}
+                    {nft.owner.slice(nft.owner.length - 4, nft.owner.length)}
+                  </p>
                 </div>
               </div>
               <div className="p-4 bg-black">
@@ -214,10 +205,10 @@ export default function MyNFTs() {
                 )}
 
                 <button
-                  className="mt-3 w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
+                  className="mt-3 w-full bg-pink-500 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 focus:outline-none focus:ring focus:ring-purple-300 active:bg-blue-700 px-6 py-3 rounded-lg text-white font-semibold shadow-md transition duration-300 ease-in-out transform hover:scale-105"
                   onClick={() => listNFT(nft)}
                 >
-                  Sell
+                  {loadingState == "loaded" ? "Sell" : "Loading..."}
                 </button>
               </div>
             </div>

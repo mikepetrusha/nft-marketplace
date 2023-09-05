@@ -18,7 +18,9 @@ export default function Home() {
   }, []);
 
   const loadNFTs = async () => {
-    const provider = new ethers.JsonRpcProvider();
+    const provider = new ethers.JsonRpcProvider(
+      "https://sepolia.infura.io/v3/9eac74003e914d29abec44e635b26fb4"
+    );
     const tokenContractERC721 = new ethers.Contract(
       erc721address,
       ERC721NFT.abi,
@@ -72,6 +74,7 @@ export default function Home() {
   };
 
   async function buyNft(nft: any) {
+    setLoadingState("not-loaded");
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.BrowserProvider(connection);
@@ -90,6 +93,7 @@ export default function Home() {
 
     await transaction.wait();
     loadNFTs();
+    setLoadingState("loaded");
   }
 
   if (loadingState === "loaded" && !nfts.length)
@@ -132,10 +136,10 @@ export default function Home() {
                   {nft.price} ETH
                 </p>
                 <button
-                  className="w-full bg-pink-500 text-white font-bold py-2 px-12 rounded"
+                  className="mt-3 w-full bg-pink-500 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 focus:outline-none focus:ring focus:ring-purple-300 active:bg-blue-700 px-6 py-3 rounded-lg text-white font-semibold shadow-md transition duration-300 ease-in-out transform hover:scale-105"
                   onClick={() => buyNft(nft)}
                 >
-                  Buy
+                  {loadingState == "loaded" ? "Buy" : "Loading..."}
                 </button>
               </div>
             </div>

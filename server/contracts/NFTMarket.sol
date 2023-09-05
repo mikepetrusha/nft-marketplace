@@ -129,6 +129,18 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
         emit MarketItemCreated(itemId, nftContract, tokenId, msg.sender, address(0), price, false, tokenType, amount);
     }
 
+    function updateListing(uint itemId, uint price, uint amount) public payable nonReentrant() {
+        require(price > 0, "Price must be greater than 0");
+
+      
+        idToMarketItem[itemId].sold = false;
+        idToMarketItem[itemId].seller = payable(msg.sender);
+        idToMarketItem[itemId].owner = address(0);
+        idToMarketItem[itemId].price = price;
+        idToMarketItem[itemId].amount = amount;
+        _itemsSold.decrement();
+    }
+
     function buyItem(uint itemId, uint amount) public payable nonReentrant() {
         require(msg.value >= idToMarketItem[itemId].price, "Error in contract: Incorrect price");
 
