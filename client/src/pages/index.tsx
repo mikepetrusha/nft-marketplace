@@ -8,10 +8,13 @@ import axios from "axios";
 import Web3Modal from "web3modal";
 import { IItem } from "@/types/nft";
 import { ipfsToHTTPS } from "@/helpers/ipfsToHTTPS";
+import { useRouter } from "next/router";
+import Image from 'next/image';
 
 export default function Home() {
   const [nfts, setNFTs] = useState<IItem[]>([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
+  const router = useRouter();
 
   useEffect(() => {
     loadNFTs();
@@ -94,20 +97,22 @@ export default function Home() {
     await transaction.wait();
     loadNFTs();
     setLoadingState("loaded");
+    router.push("/my-nfts");
   }
 
   if (loadingState === "loaded" && !nfts.length)
     return <h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>;
 
   return (
-    <div className="flex justify-center">
       <div className="px-4" style={{ maxWidth: "1600px" }}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
           {nfts.map((nft, i) => (
             <div className="border shadow rounded-xl overflow-hidden" key={i}>
-              <img
+              <Image
                 className="h-80 w-full object-cover object-center"
                 src={nft.image}
+                width={500}
+                height={500}
                 alt="image"
               />
               <div className="p-4">
@@ -146,6 +151,5 @@ export default function Home() {
           ))}
         </div>
       </div>
-    </div>
   );
 }

@@ -88,8 +88,8 @@ export default function CreateItem() {
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="w-1/2 flex flex-col pb-12">
+    <div className="w-1/3 flex flex-col pb-12 pt-20">
+      <h2 className="text-2xl font-bold">Create ERC721</h2>
         <input
           type="text"
           placeholder="Name"
@@ -134,6 +134,5 @@ export default function CreateItem() {
           {loadingState == "loaded" ? "Create NFT" : "Creating..."}
         </button>
       </div>
-    </div>
   );
 }
