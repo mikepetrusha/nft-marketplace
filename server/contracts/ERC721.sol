@@ -9,15 +9,12 @@ import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 contract ERC721NFT is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
-    address public contractAddress;
 
-    event tokenCreated (
+    event TokenCreated (
         uint indexed itemId
     );
 
-    constructor(address marketplaceAddress) ERC721("MyNFT", "MNFT") {
-        contractAddress = marketplaceAddress;
-    }
+    constructor() ERC721("MyNFT", "MNFT") {}
 
     function createToken(string memory tokenURI) public {
         _tokenIds.increment();
@@ -25,7 +22,7 @@ contract ERC721NFT is ERC721URIStorage {
 
         _safeMint(msg.sender, newItemId);
         _setTokenURI(newItemId, tokenURI);
-        emit tokenCreated(newItemId);
+        emit TokenCreated(newItemId);
     }
 }
 

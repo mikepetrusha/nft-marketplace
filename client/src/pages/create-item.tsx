@@ -59,7 +59,7 @@ export default function CreateItem() {
 
     let transaction = await contract.createToken(json.uri);
 
-    contract.on("tokenCreated", async (itemId) => {
+    contract.on("TokenCreated", async (itemId) => {
       console.log("Event is working");
       const tokenId = itemId;
 

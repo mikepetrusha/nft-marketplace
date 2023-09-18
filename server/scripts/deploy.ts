@@ -13,12 +13,12 @@ async function main() {
   console.log("NFTMarket deployed to: ", market.target);
 
   const Contract721 = await ethers.getContractFactory("ERC721NFT");
-  const contract721 = await Contract721.deploy(market.target);
+  const contract721 = await Contract721.deploy();
   await contract721.waitForDeployment();
   console.log("ContractERC721 deployed to: ", contract721.target);
 
   const Contract1155 = await ethers.getContractFactory("ERC1155NFT");
-  const contract1155 = await Contract1155.deploy(market.target);
+  const contract1155 = await Contract1155.deploy();
   await contract1155.waitForDeployment();
   console.log("ContractERC1155 deployed to: ", contract1155.target);
 }

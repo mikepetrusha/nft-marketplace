@@ -62,7 +62,7 @@ export default function CreateItem() {
       Number(formInput.amount)
     );
 
-    contract.on("tokenCreated", async (itemId) => {
+    contract.on("TokenCreated", async (itemId) => {
       console.log("Event is working");
       const tokenId = itemId;
 

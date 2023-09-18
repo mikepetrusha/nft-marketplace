@@ -28,7 +28,6 @@ export interface ERC721NFTInterface extends Interface {
     nameOrSignature:
       | "approve"
       | "balanceOf"
-      | "contractAddress"
       | "createToken"
       | "getApproved"
       | "isApprovedForAll"
@@ -49,8 +48,8 @@ export interface ERC721NFTInterface extends Interface {
       | "ApprovalForAll"
       | "BatchMetadataUpdate"
       | "MetadataUpdate"
+      | "TokenCreated"
       | "Transfer"
-      | "tokenCreated"
   ): EventFragment;
 
   encodeFunctionData(
@@ -60,10 +59,6 @@ export interface ERC721NFTInterface extends Interface {
   encodeFunctionData(
     functionFragment: "balanceOf",
     values: [AddressLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "contractAddress",
-    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "createToken", values: [string]): string;
   encodeFunctionData(
@@ -107,10 +102,6 @@ export interface ERC721NFTInterface extends Interface {
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "contractAddress",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "createToken",
     data: BytesLike
@@ -217,6 +208,18 @@ export namespace MetadataUpdateEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
+export namespace TokenCreatedEvent {
+  export type InputTuple = [itemId: BigNumberish];
+  export type OutputTuple = [itemId: bigint];
+  export interface OutputObject {
+    itemId: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
 export namespace TransferEvent {
   export type InputTuple = [
     from: AddressLike,
@@ -228,18 +231,6 @@ export namespace TransferEvent {
     from: string;
     to: string;
     tokenId: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
-export namespace tokenCreatedEvent {
-  export type InputTuple = [itemId: BigNumberish];
-  export type OutputTuple = [itemId: bigint];
-  export interface OutputObject {
-    itemId: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -297,8 +288,6 @@ export interface ERC721NFT extends BaseContract {
   >;
 
   balanceOf: TypedContractMethod<[owner: AddressLike], [bigint], "view">;
-
-  contractAddress: TypedContractMethod<[], [string], "view">;
 
   createToken: TypedContractMethod<[tokenURI: string], [void], "nonpayable">;
 
@@ -367,9 +356,6 @@ export interface ERC721NFT extends BaseContract {
   getFunction(
     nameOrSignature: "balanceOf"
   ): TypedContractMethod<[owner: AddressLike], [bigint], "view">;
-  getFunction(
-    nameOrSignature: "contractAddress"
-  ): TypedContractMethod<[], [string], "view">;
   getFunction(
     nameOrSignature: "createToken"
   ): TypedContractMethod<[tokenURI: string], [void], "nonpayable">;
@@ -461,18 +447,18 @@ export interface ERC721NFT extends BaseContract {
     MetadataUpdateEvent.OutputObject
   >;
   getEvent(
+    key: "TokenCreated"
+  ): TypedContractEvent<
+    TokenCreatedEvent.InputTuple,
+    TokenCreatedEvent.OutputTuple,
+    TokenCreatedEvent.OutputObject
+  >;
+  getEvent(
     key: "Transfer"
   ): TypedContractEvent<
     TransferEvent.InputTuple,
     TransferEvent.OutputTuple,
     TransferEvent.OutputObject
-  >;
-  getEvent(
-    key: "tokenCreated"
-  ): TypedContractEvent<
-    tokenCreatedEvent.InputTuple,
-    tokenCreatedEvent.OutputTuple,
-    tokenCreatedEvent.OutputObject
   >;
 
   filters: {
@@ -520,6 +506,17 @@ export interface ERC721NFT extends BaseContract {
       MetadataUpdateEvent.OutputObject
     >;
 
+    "TokenCreated(uint256)": TypedContractEvent<
+      TokenCreatedEvent.InputTuple,
+      TokenCreatedEvent.OutputTuple,
+      TokenCreatedEvent.OutputObject
+    >;
+    TokenCreated: TypedContractEvent<
+      TokenCreatedEvent.InputTuple,
+      TokenCreatedEvent.OutputTuple,
+      TokenCreatedEvent.OutputObject
+    >;
+
     "Transfer(address,address,uint256)": TypedContractEvent<
       TransferEvent.InputTuple,
       TransferEvent.OutputTuple,
@@ -529,17 +526,6 @@ export interface ERC721NFT extends BaseContract {
       TransferEvent.InputTuple,
       TransferEvent.OutputTuple,
       TransferEvent.OutputObject
-    >;
-
-    "tokenCreated(uint256)": TypedContractEvent<
-      tokenCreatedEvent.InputTuple,
-      tokenCreatedEvent.OutputTuple,
-      tokenCreatedEvent.OutputObject
-    >;
-    tokenCreated: TypedContractEvent<
-      tokenCreatedEvent.InputTuple,
-      tokenCreatedEvent.OutputTuple,
-      tokenCreatedEvent.OutputObject
     >;
   };
 }

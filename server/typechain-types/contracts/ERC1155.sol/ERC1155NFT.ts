@@ -28,7 +28,6 @@ export interface ERC1155NFTInterface extends Interface {
     nameOrSignature:
       | "balanceOf"
       | "balanceOfBatch"
-      | "contractAddress"
       | "createToken"
       | "isApprovedForAll"
       | "safeBatchTransferFrom"
@@ -41,10 +40,10 @@ export interface ERC1155NFTInterface extends Interface {
   getEvent(
     nameOrSignatureOrTopic:
       | "ApprovalForAll"
+      | "TokenCreated"
       | "TransferBatch"
       | "TransferSingle"
       | "URI"
-      | "tokenCreated"
   ): EventFragment;
 
   encodeFunctionData(
@@ -54,10 +53,6 @@ export interface ERC1155NFTInterface extends Interface {
   encodeFunctionData(
     functionFragment: "balanceOfBatch",
     values: [AddressLike[], BigNumberish[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "contractAddress",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "createToken",
@@ -94,10 +89,6 @@ export interface ERC1155NFTInterface extends Interface {
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "balanceOfBatch",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "contractAddress",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -142,6 +133,18 @@ export namespace ApprovalForAllEvent {
     account: string;
     operator: string;
     approved: boolean;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace TokenCreatedEvent {
+  export type InputTuple = [itemId: BigNumberish];
+  export type OutputTuple = [itemId: bigint];
+  export interface OutputObject {
+    itemId: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -218,18 +221,6 @@ export namespace URIEvent {
   export type LogDescription = TypedLogDescription<Event>;
 }
 
-export namespace tokenCreatedEvent {
-  export type InputTuple = [itemId: BigNumberish];
-  export type OutputTuple = [itemId: bigint];
-  export interface OutputObject {
-    itemId: bigint;
-  }
-  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
-  export type Filter = TypedDeferredTopicFilter<Event>;
-  export type Log = TypedEventLog<Event>;
-  export type LogDescription = TypedLogDescription<Event>;
-}
-
 export interface ERC1155NFT extends BaseContract {
   connect(runner?: ContractRunner | null): ERC1155NFT;
   waitForDeployment(): Promise<this>;
@@ -284,8 +275,6 @@ export interface ERC1155NFT extends BaseContract {
     [bigint[]],
     "view"
   >;
-
-  contractAddress: TypedContractMethod<[], [string], "view">;
 
   createToken: TypedContractMethod<
     [tokenURI: string, amount: BigNumberish],
@@ -356,9 +345,6 @@ export interface ERC1155NFT extends BaseContract {
     "view"
   >;
   getFunction(
-    nameOrSignature: "contractAddress"
-  ): TypedContractMethod<[], [string], "view">;
-  getFunction(
     nameOrSignature: "createToken"
   ): TypedContractMethod<
     [tokenURI: string, amount: BigNumberish],
@@ -420,6 +406,13 @@ export interface ERC1155NFT extends BaseContract {
     ApprovalForAllEvent.OutputObject
   >;
   getEvent(
+    key: "TokenCreated"
+  ): TypedContractEvent<
+    TokenCreatedEvent.InputTuple,
+    TokenCreatedEvent.OutputTuple,
+    TokenCreatedEvent.OutputObject
+  >;
+  getEvent(
     key: "TransferBatch"
   ): TypedContractEvent<
     TransferBatchEvent.InputTuple,
@@ -440,13 +433,6 @@ export interface ERC1155NFT extends BaseContract {
     URIEvent.OutputTuple,
     URIEvent.OutputObject
   >;
-  getEvent(
-    key: "tokenCreated"
-  ): TypedContractEvent<
-    tokenCreatedEvent.InputTuple,
-    tokenCreatedEvent.OutputTuple,
-    tokenCreatedEvent.OutputObject
-  >;
 
   filters: {
     "ApprovalForAll(address,address,bool)": TypedContractEvent<
@@ -458,6 +444,17 @@ export interface ERC1155NFT extends BaseContract {
       ApprovalForAllEvent.InputTuple,
       ApprovalForAllEvent.OutputTuple,
       ApprovalForAllEvent.OutputObject
+    >;
+
+    "TokenCreated(uint256)": TypedContractEvent<
+      TokenCreatedEvent.InputTuple,
+      TokenCreatedEvent.OutputTuple,
+      TokenCreatedEvent.OutputObject
+    >;
+    TokenCreated: TypedContractEvent<
+      TokenCreatedEvent.InputTuple,
+      TokenCreatedEvent.OutputTuple,
+      TokenCreatedEvent.OutputObject
     >;
 
     "TransferBatch(address,address,address,uint256[],uint256[])": TypedContractEvent<
@@ -491,17 +488,6 @@ export interface ERC1155NFT extends BaseContract {
       URIEvent.InputTuple,
       URIEvent.OutputTuple,
       URIEvent.OutputObject
-    >;
-
-    "tokenCreated(uint256)": TypedContractEvent<
-      tokenCreatedEvent.InputTuple,
-      tokenCreatedEvent.OutputTuple,
-      tokenCreatedEvent.OutputObject
-    >;
-    tokenCreated: TypedContractEvent<
-      tokenCreatedEvent.InputTuple,
-      tokenCreatedEvent.OutputTuple,
-      tokenCreatedEvent.OutputObject
     >;
   };
 }

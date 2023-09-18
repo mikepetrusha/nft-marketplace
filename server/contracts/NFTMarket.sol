@@ -18,12 +18,6 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
     Counters.Counter private _itemIds;
     Counters.Counter private _itemsSold;
 
-    address owner;
-
-    constructor() {
-        owner = msg.sender;
-    }
-
     enum TokenType {
         ERC1155,
         ERC721
@@ -42,20 +36,6 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
     }
 
     mapping (uint => MarketItem) private idToMarketItem;
-
-    event MarketItemCreated (
-        uint indexed itemId,
-        address indexed nftContract,
-        uint indexed tokenId,
-        address seller,
-        address owner,
-        uint price,
-        bool sold,
-        TokenType TokenType,
-        uint amount
-    );
-
-
 
 
 
@@ -106,10 +86,13 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
 
 
 
-    function listItem(address nftContract, uint tokenId, uint price, uint amount) public payable nonReentrant() {
+    function listItem(address nftContract, uint tokenId, uint price, uint amount) public {
         TokenType tokenType = getTokenType(nftContract);
 
         require(price > 0, "Price must be greater than 0");
+        require(nftContract != address(0), "Invalid NFT contract address");
+        require(tokenId > 0, "Invalid token ID");
+        require(amount > 0, "Amount must be greater than 0");
 
         _itemIds.increment();
         uint itemId = _itemIds.current();
@@ -118,23 +101,23 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
             itemId,
             nftContract,
             tokenId,
-            payable(msg.sender),
-            payable(address(0)),
+            msg.sender,
+            address(0),
             price,
             false,
             tokenType,
             amount
         );
-
-        emit MarketItemCreated(itemId, nftContract, tokenId, msg.sender, address(0), price, false, tokenType, amount);
     }
 
-    function updateListing(uint itemId, uint price, uint amount) public payable nonReentrant() {
+    function updateListing(uint itemId, uint price, uint amount) public {
         require(price > 0, "Price must be greater than 0");
+        require(itemId > 0, "Invalid token ID");
+        require(amount > 0, "Amount must be greater than 0");
 
       
         idToMarketItem[itemId].sold = false;
-        idToMarketItem[itemId].seller = payable(msg.sender);
+        idToMarketItem[itemId].seller = msg.sender;
         idToMarketItem[itemId].owner = address(0);
         idToMarketItem[itemId].price = price;
         idToMarketItem[itemId].amount = amount;
@@ -147,10 +130,9 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
 
         payable(idToMarketItem[itemId].seller).transfer(msg.value);
         transferListingTokens(idToMarketItem[itemId].seller,  msg.sender, amount, idToMarketItem[itemId]);
-        idToMarketItem[itemId].owner = payable(msg.sender);
+        idToMarketItem[itemId].owner = msg.sender;
         idToMarketItem[itemId].sold = true;
         _itemsSold.increment();
-        emit MarketItemCreated(itemId, idToMarketItem[itemId].assetContract, idToMarketItem[itemId].tokenId, idToMarketItem[itemId].seller, msg.sender, msg.value, true, idToMarketItem[itemId].tokenType, idToMarketItem[itemId].amount);
     }
 
     function getTokenType(address _assetContract) internal view returns (TokenType tokenType) {
@@ -177,73 +159,87 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
     }
 
     //-------
+    // function fetchMarketItems() public view returns (MarketItem[] memory) {
+    //     uint itemCount = _itemIds.current();
+    //     uint unsoldItemCount = _itemIds.current() - _itemsSold.current();
+    //     uint currentIndex = 0;
+
+    //     MarketItem[] memory items = new MarketItem[](unsoldItemCount);
+        
+    //     for(uint i = 0; i < itemCount; i++) {
+    //         if (idToMarketItem[i + 1].sold == false) {
+    //             uint currentId = idToMarketItem[i + 1].itemId;
+    //             MarketItem storage currentItem = idToMarketItem[currentId];
+    //             items[currentIndex] = currentItem;
+    //             currentIndex += 1;
+    //         }
+    //     }
+
+    //     return items;
+    // }
+
     function fetchMarketItems() public view returns (MarketItem[] memory) {
         uint itemCount = _itemIds.current();
-        uint unsoldItemCount = _itemIds.current() - _itemsSold.current();
-        uint currentIndex = 0;
-
+        uint unsoldItemCount = itemCount - _itemsSold.current();
+    
         MarketItem[] memory items = new MarketItem[](unsoldItemCount);
-        
-        for(uint i = 0; i < itemCount; i++) {
-            if (idToMarketItem[i + 1].owner == address(0)) {
-                uint currentId = idToMarketItem[i + 1].itemId;
-                MarketItem storage currentItem = idToMarketItem[currentId];
-                items[currentIndex] = currentItem;
-                currentIndex += 1;
-            }
-        }
-        
-        return items;
-    }
-
-     function fetchMyItems() public view returns (MarketItem[] memory) {
-        uint totalItemCount = _itemIds.current();
-        uint itemCount = 0;
         uint currentIndex = 0;
 
-        for(uint i = 0; i < totalItemCount; i++) {
-            if(idToMarketItem[i + 1].owner == msg.sender) { 
-                itemCount += 1;
+        for (uint i = 1; i <= itemCount; i++) {
+            if (!idToMarketItem[i].sold) {
+                items[currentIndex] = idToMarketItem[i];
+                currentIndex++;
             }
         }
-
-        MarketItem[] memory items = new MarketItem[](itemCount);
-        
-        for(uint i = 0; i < totalItemCount; i++) {
-            if (idToMarketItem[i + 1].owner == msg.sender) {
-                uint currentId = idToMarketItem[i + 1].itemId;
-                MarketItem storage currentItem = idToMarketItem[currentId];
-                items[currentIndex] = currentItem;
-                currentIndex += 1;
-            }
-        }
-        
+    
         return items;
-    }
+}
 
-      function fetchListedItems() public view returns (MarketItem[] memory) {
+
+    function fetchMyItems() public view returns (MarketItem[] memory) {
         uint totalItemCount = _itemIds.current();
+        MarketItem[] memory items = new MarketItem[](totalItemCount);
         uint itemCount = 0;
-        uint currentIndex = 0;
 
-        for(uint i = 0; i < totalItemCount; i++) {
-            if(idToMarketItem[i + 1].seller == msg.sender) { 
-                itemCount += 1;
+        for (uint i = 1; i <= totalItemCount; i++) {
+            MarketItem storage currentItem = idToMarketItem[i];
+            if (currentItem.owner == msg.sender) {
+                items[itemCount] = currentItem;
+                itemCount++;
             }
         }
 
-        MarketItem[] memory items = new MarketItem[](itemCount);
-        
-        for(uint i = 0; i < totalItemCount; i++) {
-            if (idToMarketItem[i + 1].seller == msg.sender) {
-                uint currentId = idToMarketItem[i + 1].itemId;
-                MarketItem storage currentItem = idToMarketItem[currentId];
-                items[currentIndex] = currentItem;
-                currentIndex += 1;
-            }
+        // Resize the items array to the actual count of user's items
+        assembly {
+            mstore(items, itemCount)
         }
-        
+
         return items;
-    }
+}
 
+
+    //  function fetchMyItems() public view returns (MarketItem[] memory) {
+    //     uint totalItemCount = _itemIds.current();
+    //     uint itemCount = 0;
+    //     uint currentIndex = 0;
+
+    //     for(uint i = 0; i < totalItemCount; i++) {
+    //         if(idToMarketItem[i + 1].owner == msg.sender) { 
+    //             itemCount += 1;
+    //         }
+    //     }
+
+    //     MarketItem[] memory items = new MarketItem[](itemCount);
+        
+    //     for(uint i = 0; i < totalItemCount; i++) {
+    //         if (idToMarketItem[i + 1].owner == msg.sender) {
+    //             uint currentId = idToMarketItem[i + 1].itemId;
+    //             MarketItem storage currentItem = idToMarketItem[currentId];
+    //             items[currentIndex] = currentItem;
+    //             currentIndex += 1;
+    //         }
+    //     }
+        
+    //     return items;
+    // }
 }
