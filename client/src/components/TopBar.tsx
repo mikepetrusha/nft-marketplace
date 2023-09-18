@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { routes } from "@/constants/Routes";
+import { ConnectButton } from "./ConnectionButton";
 
 export const TopBar = () => {
   return (
     <>
+    <div className="flex justify-around">
     <p className="text-4xl font-bold">Marketplace</p>
+      <ConnectButton />
+    </div>
     <div className="flex mt-4 justify-center">
       {routes.map(route => (
         <Link

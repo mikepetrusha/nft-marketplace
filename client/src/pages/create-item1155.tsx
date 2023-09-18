@@ -89,7 +89,7 @@ export default function CreateItem() {
 
   return (
     <div className="w-1/3 flex flex-col pb-12 pt-20">
-      <h2 className="text-2xl font-bold">Create ERC721</h2>
+      <h2 className="text-2xl font-bold">Create ERC1155</h2>
         <input
           type="text"
           placeholder="Name"
