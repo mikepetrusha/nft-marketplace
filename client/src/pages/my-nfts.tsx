@@ -6,9 +6,9 @@ import { useEffect, useState } from "react";
 import Web3Modal from "web3modal";
 import { ethers } from "ethers";
 import { IItem } from "@/types/nft";
-import axios from "axios";
-import { ipfsToHTTPS } from "@/helpers/ipfsToHTTPS";
 import { useRouter } from "next/router";
+import Image from 'next/image';
+import { useMarket } from "@/hooks/useMarket";
 
 export default function MyNFTs() {
   const [formInput, updateFormInput] = useState({
@@ -18,6 +18,7 @@ export default function MyNFTs() {
   const [nfts, setNfts] = useState<IItem[]>([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
   const router = useRouter();
+  const {loadNft} = useMarket()
 
   useEffect(() => {
     loadNfts();
@@ -81,63 +82,12 @@ export default function MyNFTs() {
   };
 
   const loadNfts = async () => {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.BrowserProvider(connection);
-    const signer = await provider.getSigner();
-
-    const marketContract = new ethers.Contract(
-      nftmarketaddress,
-      NFTMarket.abi,
-      signer
-    );
-    const tokenContractERC721 = new ethers.Contract(
-      erc721address,
-      ERC721NFT.abi,
-      provider
-    );
-
-    const tokenContractERC1155 = new ethers.Contract(
-      erc1155address,
-      ERC1155NFT.abi,
-      provider
-    );
-    const data = await marketContract.fetchMyItems();
-
-    const items: IItem[] = await Promise.all(
-      data.map(async (i: any) => {
-        let tokenUri;
-        let amount;
-        let owner;
-
-        if (Number(i.tokenType) === 1) {
-          tokenUri = await tokenContractERC721.tokenURI(i.tokenId);
-          owner = await tokenContractERC721.ownerOf(i.tokenId);
-          console.log(owner);
-          amount = 1;
-        } else {
-          tokenUri = await tokenContractERC1155.uri(i.tokenId);
-          amount = await tokenContractERC1155.balanceOf(
-            i.owner,
-            Number(i.tokenId)
-          );
-        }
-        const meta = await axios.get(ipfsToHTTPS(tokenUri));
-        let item = {
-          itemId: i.itemId,
-          tokenId: Number(i.tokenId),
-          owner: i.owner,
-          image: ipfsToHTTPS(meta.data.image),
-          name: meta.data.name,
-          description: meta.data.description,
-          tokenType: Number(i.tokenType),
-          amount: Number(amount),
-        };
-        return item;
-      })
-    );
-
-    setNfts(items.filter((item) => item.amount > 0));
+    try {
+      const items = await loadNft()
+      setNfts(items);
+    } catch (error) {
+      console.log(error)
+    }
     setLoadingState("loaded");
   };
 
@@ -145,43 +95,33 @@ export default function MyNFTs() {
     return <h1 className="py-10 px-20 text-3xl">No assets owned</h1>;
 
   return (
-    <div className="flex justify-center">
-      <div className="px-4" style={{ maxWidth: "1600px" }}>
+      <div className="px-4 max-w-7xl" >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
           {nfts.map((nft, i) => (
             <div
               className="border overflow-hidden rounded-lg bg-white shadow-xl ring-1 ring-slate-900/5"
               key={i}
             >
-              <img
+              <Image
                 className="h-80 w-full object-cover object-center"
                 src={nft.image}
+                width={500}
+                height={500}
                 alt="image"
               />
               <div className="p-4">
-                <p
-                  style={{ height: "64px" }}
-                  className="text-2xl font-semibold"
-                >
+                <p className="text-2xl font-semibold overflow-hidden overflow-ellipsis">
                   {nft.name}
                 </p>
-                <div style={{ overflow: "hidden" }}>
-                  <p className="text-gray-400">{nft.description}</p>
-                </div>
-                <div style={{ overflow: "hidden" }}>
-                  <p className="text-gray-400">
+                  <p className="text-gray-400 overflow-hidden overflow-ellipsis">Description: {nft.description}</p>
+                  <p className="text-gray-400 overflow-hidden overflow-ellipsis">
                     Token Type: {nft.tokenType === 0 ? "ERC1155" : "ERC721"}
                   </p>
-                </div>
-                <div style={{ overflow: "hidden" }}>
-                  <p className="text-gray-400">Amount: {nft.amount}</p>
-                </div>
-                <div style={{ overflow: "hidden" }}>
-                  <p className="text-gray-400">
+                  <p className="text-gray-400 overflow-hidden overflow-ellipsis">Amount: {nft.amount}</p>
+                  <p className="text-gray-400 overflow-hidden overflow-ellipsis">
                     Owner:{" "}
                     {nft.owner.slice(nft.owner.length - 4, nft.owner.length)}
                   </p>
-                </div>
               </div>
               <div className="p-4 bg-black">
                 <input
@@ -193,16 +133,15 @@ export default function MyNFTs() {
                   }
                 />
 
-                {Number(nft.tokenType) === 0 && (
                   <input
+                    disabled={Number(nft.tokenType) === 0 ? false : true}
                     type="text"
-                    placeholder="Amount"
+                    placeholder={Number(nft.tokenType) === 0 ? 'Amount' : '1'}
                     className="mt-3 border rounded py-2 px-4"
                     onChange={(e) =>
                       updateFormInput({ ...formInput, amount: e.target.value })
                     }
                   />
-                )}
 
                 <button
                   className="mt-3 w-full bg-pink-500 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 focus:outline-none focus:ring focus:ring-purple-300 active:bg-blue-700 px-6 py-3 rounded-lg text-white font-semibold shadow-md transition duration-300 ease-in-out transform hover:scale-105"
@@ -215,6 +154,5 @@ export default function MyNFTs() {
           ))}
         </div>
       </div>
-    </div>
   );
 }

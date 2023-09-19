@@ -3,10 +3,9 @@ import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import Web3Modal from "web3modal";
 
-import { nftmarketaddress, erc1155address, erc721address } from "../../config";
+import { nftmarketaddress, erc721address } from "../../config";
 import NFTMarket from "../../../server/artifacts/contracts/NFTMarket.sol/NFTMarket.json";
 import ERC721NFT from "../../../server/artifacts/contracts/ERC721.sol/ERC721NFT.json";
-import ERC1155NFT from "../../../server/artifacts/contracts/ERC1155.sol/ERC1155NFT.json";
 
 export default function CreateItem() {
   const [loadingState, setLoadingState] = useState("loaded");
@@ -81,8 +80,8 @@ export default function CreateItem() {
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="w-1/2 flex flex-col pb-12">
+      <div className="w-1/3 flex flex-col pb-12 pt-20">
+        <h2 className="text-2xl font-bold">Create ERC721</h2>
         <input
           type="text"
           placeholder="Name"
@@ -119,6 +118,5 @@ export default function CreateItem() {
           {loadingState == "loaded" ? "Create NFT" : "Creating..."}
         </button>
       </div>
-    </div>
   );
 }

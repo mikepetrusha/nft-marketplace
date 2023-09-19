@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  images: {
+    domains: ['ipfs.io'], // Add the hostname you want to allow here
+  },
 }
 
 module.exports = nextConfig
