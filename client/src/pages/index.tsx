@@ -16,8 +16,12 @@ export default function Home() {
 
   const loadNFTs = async () => {
     setLoadingState("not-loaded");
-    const items = await loadMarketNfts()
-    setNFTs(items);
+    try {
+      const items = await loadMarketNfts()
+      setNFTs(items);
+    } catch (error) {
+      console.log(error)
+    }
     setLoadingState("loaded");
   };
 

@@ -42,13 +42,7 @@ export default function MyNFTs() {
 
       contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
 
-      console.log(
-        nft,
-        ethers.parseUnits(formInput.price, "ether"),
-        formInput.amount
-      );
-
-      transaction = await contract.updateListing(
+      transaction = await contract.listItem(
         nft.itemId,
         ethers.parseUnits(formInput.price, "ether"),
         1
@@ -68,7 +62,7 @@ export default function MyNFTs() {
 
       contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
 
-      transaction = await contract.listItem(
+      transaction = await contract.createItem(
         erc1155address,
         tokenId,
         ethers.parseUnits(formInput.price, "ether"),

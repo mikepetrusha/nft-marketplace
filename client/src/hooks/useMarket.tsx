@@ -89,7 +89,9 @@ export const useMarket = () => {
             provider
           );
           const data = await marketContract.fetchMarketItems();
-      
+
+          console.log(data)
+
           const items: IItem[] = await Promise.all(
             data.map(async (i: any) => {
               let tokenUri;
@@ -99,7 +101,8 @@ export const useMarket = () => {
               } else {
                 tokenUri = await tokenContractERC1155.uri(i.tokenId);
               }
-      
+              console.log(tokenUri)
+              if(tokenUri === '') return {}
               const meta = await axios.get(ipfsToHTTPS(tokenUri));
               let price = ethers.formatUnits(i.price.toString(), "ether");
       

@@ -74,7 +74,7 @@ export default function CreateItem() {
 
       contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
 
-      transaction = await contract.listItem(
+      transaction = await contract.createItem(
         erc1155address,
         tokenId,
         price,
@@ -83,7 +83,7 @@ export default function CreateItem() {
       await transaction.wait();
 
       setLoadingState("loaded");
-      router.push("/");
+      router.push("/my-nfts");
     });
   };
 

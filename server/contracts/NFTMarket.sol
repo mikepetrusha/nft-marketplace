@@ -12,8 +12,12 @@ import "../node_modules/@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.s
 import "../node_modules/@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "../node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol";
 
-
-contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver, IERC1155Receiver {
+contract NFTMarket is
+    ReentrancyGuard,
+    AccessControlEnumerable,
+    IERC721Receiver,
+    IERC1155Receiver
+{
     using Counters for Counters.Counter;
     Counters.Counter private _itemIds;
     Counters.Counter private _itemsSold;
@@ -35,9 +39,7 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
         uint amount;
     }
 
-    mapping (uint => MarketItem) private idToMarketItem;
-
-
+    mapping(uint => MarketItem) private idToMarketItem;
 
     function onERC1155Received(
         address,
@@ -68,7 +70,9 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
         return this.onERC721Received.selector;
     }
 
-    function supportsInterface(bytes4 interfaceId)
+    function supportsInterface(
+        bytes4 interfaceId
+    )
         public
         view
         virtual
@@ -81,12 +85,12 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
             super.supportsInterface(interfaceId);
     }
 
-
-
-
-
-
-    function listItem(address nftContract, uint tokenId, uint price, uint amount) public {
+    function createItem(
+        address nftContract,
+        uint tokenId,
+        uint price,
+        uint amount
+    ) public {
         TokenType tokenType = getTokenType(nftContract);
 
         require(price > 0, "Price must be greater than 0");
@@ -102,86 +106,88 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
             nftContract,
             tokenId,
             msg.sender,
-            address(0),
+            msg.sender,
             price,
-            false,
+            true,
             tokenType,
             amount
         );
     }
 
-    function updateListing(uint itemId, uint price, uint amount) public {
+    function listItem(uint itemId, uint price, uint amount) public {
         require(price > 0, "Price must be greater than 0");
         require(itemId > 0, "Invalid token ID");
         require(amount > 0, "Amount must be greater than 0");
 
-      
         idToMarketItem[itemId].sold = false;
         idToMarketItem[itemId].seller = msg.sender;
-        idToMarketItem[itemId].owner = address(0);
         idToMarketItem[itemId].price = price;
         idToMarketItem[itemId].amount = amount;
-        _itemsSold.decrement();
     }
 
-    function buyItem(uint itemId, uint amount) public payable nonReentrant() {
-        require(msg.value >= idToMarketItem[itemId].price, "Error in contract: Incorrect price");
-
+    function buyItem(uint itemId, uint amount) public payable nonReentrant {
+        require(
+            msg.value >= idToMarketItem[itemId].price,
+            "Error in contract: Incorrect price"
+        );
 
         payable(idToMarketItem[itemId].seller).transfer(msg.value);
-        transferListingTokens(idToMarketItem[itemId].seller,  msg.sender, amount, idToMarketItem[itemId]);
+        transferListingTokens(
+            idToMarketItem[itemId].seller,
+            msg.sender,
+            amount,
+            idToMarketItem[itemId]
+        );
         idToMarketItem[itemId].owner = msg.sender;
         idToMarketItem[itemId].sold = true;
         _itemsSold.increment();
     }
 
-    function getTokenType(address _assetContract) internal view returns (TokenType tokenType) {
-        if (IERC165(_assetContract).supportsInterface(type(IERC1155).interfaceId)) {
+    function getTokenType(
+        address _assetContract
+    ) internal view returns (TokenType tokenType) {
+        if (
+            IERC165(_assetContract).supportsInterface(
+                type(IERC1155).interfaceId
+            )
+        ) {
             tokenType = TokenType.ERC1155;
-        } else if (IERC165(_assetContract).supportsInterface(type(IERC721).interfaceId)) {
+        } else if (
+            IERC165(_assetContract).supportsInterface(type(IERC721).interfaceId)
+        ) {
             tokenType = TokenType.ERC721;
         } else {
             revert("token must be ERC1155 or ERC721.");
         }
     }
 
-     function transferListingTokens(
+    function transferListingTokens(
         address _from,
         address _to,
         uint256 _quantity,
         MarketItem memory _listing
     ) internal {
         if (_listing.tokenType == TokenType.ERC1155) {
-            IERC1155(_listing.assetContract).safeTransferFrom(_from, _to, _listing.tokenId, _quantity, "");
+            IERC1155(_listing.assetContract).safeTransferFrom(
+                _from,
+                _to,
+                _listing.tokenId,
+                _quantity,
+                ""
+            );
         } else if (_listing.tokenType == TokenType.ERC721) {
-            IERC721(_listing.assetContract).safeTransferFrom(_from, _to, _listing.tokenId);
+            IERC721(_listing.assetContract).safeTransferFrom(
+                _from,
+                _to,
+                _listing.tokenId
+            );
         }
     }
-
-    //-------
-    // function fetchMarketItems() public view returns (MarketItem[] memory) {
-    //     uint itemCount = _itemIds.current();
-    //     uint unsoldItemCount = _itemIds.current() - _itemsSold.current();
-    //     uint currentIndex = 0;
-
-    //     MarketItem[] memory items = new MarketItem[](unsoldItemCount);
-        
-    //     for(uint i = 0; i < itemCount; i++) {
-    //         if (idToMarketItem[i + 1].sold == false) {
-    //             uint currentId = idToMarketItem[i + 1].itemId;
-    //             MarketItem storage currentItem = idToMarketItem[currentId];
-    //             items[currentIndex] = currentItem;
-    //             currentIndex += 1;
-    //         }
-    //     }
-
-    //     return items;
-    // }
 
     function fetchMarketItems() public view returns (MarketItem[] memory) {
         uint itemCount = _itemIds.current();
         uint unsoldItemCount = itemCount - _itemsSold.current();
-    
+
         MarketItem[] memory items = new MarketItem[](unsoldItemCount);
         uint currentIndex = 0;
 
@@ -191,10 +197,9 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
                 currentIndex++;
             }
         }
-    
-        return items;
-}
 
+        return items;
+    }
 
     function fetchMyItems() public view returns (MarketItem[] memory) {
         uint totalItemCount = _itemIds.current();
@@ -209,37 +214,10 @@ contract NFTMarket is ReentrancyGuard, AccessControlEnumerable, IERC721Receiver,
             }
         }
 
-        // Resize the items array to the actual count of user's items
         assembly {
             mstore(items, itemCount)
         }
 
         return items;
-}
-
-
-    //  function fetchMyItems() public view returns (MarketItem[] memory) {
-    //     uint totalItemCount = _itemIds.current();
-    //     uint itemCount = 0;
-    //     uint currentIndex = 0;
-
-    //     for(uint i = 0; i < totalItemCount; i++) {
-    //         if(idToMarketItem[i + 1].owner == msg.sender) { 
-    //             itemCount += 1;
-    //         }
-    //     }
-
-    //     MarketItem[] memory items = new MarketItem[](itemCount);
-        
-    //     for(uint i = 0; i < totalItemCount; i++) {
-    //         if (idToMarketItem[i + 1].owner == msg.sender) {
-    //             uint currentId = idToMarketItem[i + 1].itemId;
-    //             MarketItem storage currentItem = idToMarketItem[currentId];
-    //             items[currentIndex] = currentItem;
-    //             currentIndex += 1;
-    //         }
-    //     }
-        
-    //     return items;
-    // }
+    }
 }
