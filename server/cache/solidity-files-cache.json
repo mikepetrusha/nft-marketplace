@@ -853,8 +853,8 @@
       ]
     },
     "C:\\Users\\User\\Desktop\\Files\\nft-marketplace\\server\\contracts\\NFTMarket.sol": {
-      "lastModificationDate": 1695137548455,
-      "contentHash": "4ceb5b0bd85f44043ea6b0f41cfa7dbd",
+      "lastModificationDate": 1695374217083,
+      "contentHash": "e4b52aa216b4dea888527d5405f95c28",
       "sourceName": "contracts/NFTMarket.sol",
       "solcConfig": {
         "version": "0.8.19",

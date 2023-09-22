@@ -2,10 +2,9 @@ import formidable from "formidable";
 import { readFileSync, unlinkSync } from "fs";
 import { NextApiHandler } from "next";
 import { File, NFTStorage } from "nft.storage";
+import { NFTSTORAGETOKEN } from "../../../config";
 
-const client = new NFTStorage({
-  token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDEyQ0NCZWQ5Zjc5NEREODU3NkNGOEVmOWE4OTk4QTM2NUIyMjgyYjUiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY5MDM4MDY1MzY0MSwibmFtZSI6Im5mdC1tYXJrZXRwbGFjZSJ9.rOKCZcZc7w4CWYac7_wQNigIuihiWhwxF-NVY7bnUYE`,
-});
+const client = new NFTStorage({ token: NFTSTORAGETOKEN });
 
 const handler: NextApiHandler = async (req, res) => {
   if (req.method != "POST") {

@@ -1,10 +1,4 @@
-import { nftmarketaddress, erc1155address, erc721address } from "../../config";
-import NFTMarket from "../../../server/artifacts/contracts/NFTMarket.sol/NFTMarket.json";
-import ERC721NFT from "../../../server/artifacts/contracts/ERC721.sol/ERC721NFT.json";
-import ERC1155NFT from "../../../server/artifacts/contracts/ERC1155.sol/ERC1155NFT.json";
 import { useEffect, useState } from "react";
-import Web3Modal from "web3modal";
-import { ethers } from "ethers";
 import { IItem } from "@/types/nft";
 import { useRouter } from "next/router";
 import Image from 'next/image';
@@ -18,7 +12,7 @@ export default function MyNFTs() {
   const [nfts, setNfts] = useState<IItem[]>([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
   const router = useRouter();
-  const {loadNft} = useMarket()
+  const {loadNft, listNft} = useMarket()
 
   useEffect(() => {
     loadNfts();
@@ -26,56 +20,17 @@ export default function MyNFTs() {
 
   const listNFT = async (nft: any) => {
     setLoadingState("not-loaded");
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.BrowserProvider(connection);
-    const signer = await provider.getSigner();
-
-    const tokenId = nft.tokenId;
-
-    let contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
-
-    if (Number(nft.tokenType) === 1) {
-      let contract = new ethers.Contract(erc721address, ERC721NFT.abi, signer);
-      let transaction = await contract.approve(nftmarketaddress, tokenId);
-      await transaction.wait();
-
-      contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
-
-      transaction = await contract.listItem(
-        nft.itemId,
-        ethers.parseUnits(formInput.price, "ether"),
-        1
-      );
-      await transaction.wait();
-    } else {
-      let contract = new ethers.Contract(
-        erc1155address,
-        ERC1155NFT.abi,
-        signer
-      );
-      let transaction = await contract.setApprovalForAll(
-        nftmarketaddress,
-        true
-      );
-      await transaction.wait();
-
-      contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
-
-      transaction = await contract.createItem(
-        erc1155address,
-        tokenId,
-        ethers.parseUnits(formInput.price, "ether"),
-        formInput.amount
-      );
-      await transaction.wait();
+    try {
+      await listNft(nft, formInput.price, formInput.amount)
+    } catch (error) {
+      console.log(error)
     }
-
     setLoadingState("loaded");
     router.push("/");
   };
 
   const loadNfts = async () => {
+    setLoadingState("not-loaded");
     try {
       const items = await loadNft()
       setNfts(items);

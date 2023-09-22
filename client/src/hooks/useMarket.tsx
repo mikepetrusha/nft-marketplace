@@ -7,6 +7,7 @@ import ERC1155NFT from '../../../server/artifacts/contracts/ERC1155.sol/ERC1155N
 import { IItem } from "@/types/nft";
 import axios from "axios";
 import { ipfsToHTTPS } from "@/helpers/ipfsToHTTPS";
+import { INFURALINK } from "../../config";
 
 export const useMarket = () => {
     const {signer} = useSigner()
@@ -50,9 +51,12 @@ export const useMarket = () => {
                 );
               }
               const meta = await axios.get(ipfsToHTTPS(tokenUri));
+              let price = ethers.formatUnits(i.price.toString(), "ether");
               let item = {
-                itemId: i.itemId,
+                price,
+                itemId: Number(i.itemId),
                 tokenId: Number(i.tokenId),
+                seller: i.seller,
                 owner: i.owner,
                 image: ipfsToHTTPS(meta.data.image),
                 name: meta.data.name,
@@ -64,14 +68,16 @@ export const useMarket = () => {
             })
           );
 
-          return items.filter((item) => item.amount > 0)
+          const filteredItems = items.filter((item, index, self) => {
+            return item.amount > 0 && self.findIndex((i) => i.tokenId === item.tokenId) === index;
+          });
+        
+          return filteredItems;
     }
 
 
     const loadMarketNfts = async() => {
-        const provider = new ethers.JsonRpcProvider(
-            "https://sepolia.infura.io/v3/9eac74003e914d29abec44e635b26fb4"
-          );
+        const provider = new ethers.JsonRpcProvider(INFURALINK);
           const tokenContractERC721 = new ethers.Contract(
             erc721address,
             ERC721NFT.abi,
@@ -90,8 +96,6 @@ export const useMarket = () => {
           );
           const data = await marketContract.fetchMarketItems();
 
-          console.log(data)
-
           const items: IItem[] = await Promise.all(
             data.map(async (i: any) => {
               let tokenUri;
@@ -101,11 +105,11 @@ export const useMarket = () => {
               } else {
                 tokenUri = await tokenContractERC1155.uri(i.tokenId);
               }
-              console.log(tokenUri)
+
               if(tokenUri === '') return {}
               const meta = await axios.get(ipfsToHTTPS(tokenUri));
               let price = ethers.formatUnits(i.price.toString(), "ether");
-      
+
               let item = {
                 price,
                 itemId: Number(i.itemId),
@@ -127,7 +131,6 @@ export const useMarket = () => {
     }
 
     const BuyNft = async(nft: any) => {
-
         const transaction = await marketContract.buyItem(nft.itemId, nft.amount, {
             value: ethers.parseEther(nft.price),
         });
@@ -135,5 +138,45 @@ export const useMarket = () => {
         await transaction.wait();
     }
 
-    return {loadNft, loadMarketNfts, BuyNft}
+    const listNft = async(nft: any, price: string, amount: string) => {
+  
+      const tokenId = nft.tokenId;
+  
+      if (Number(nft.tokenType) === 1) {
+        let contract = new ethers.Contract(erc721address, ERC721NFT.abi, signer);
+        let transaction = await contract.approve(nftmarketaddress, tokenId);
+        await transaction.wait();
+  
+        contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
+  
+        transaction = await contract.listItem(
+          nft.itemId,
+          ethers.parseUnits(price, "ether"),
+          1
+        );
+        await transaction.wait();
+      } else {
+        let contract = new ethers.Contract(
+          erc1155address,
+          ERC1155NFT.abi,
+          signer
+        );
+        let transaction = await contract.setApprovalForAll(
+          nftmarketaddress,
+          true
+        );
+        await transaction.wait();
+  
+        contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
+  
+        transaction = await contract.listItem(
+          tokenId,
+          ethers.parseUnits(price, "ether"),
+          amount
+        );
+        await transaction.wait();
+      }
+    }
+
+    return {loadNft, loadMarketNfts, BuyNft, listNft}
 }
