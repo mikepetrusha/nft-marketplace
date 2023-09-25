@@ -1,13 +1,20 @@
 export interface IItem {
-  price?: string;
+  price: string;
   itemId: number;
   tokenId: number;
-  seller?: string;
+  seller: string;
   owner: string;
   image: string;
   name: string;
   description: string;
-  sold?: boolean;
   tokenType: number;
   amount: number;
+}
+
+export interface IFormInput {
+  name: string;
+  description: string;
+  price: string;
+  image: File[];
+  amount?: string;
 }

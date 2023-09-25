@@ -1,15 +1,17 @@
 import { ethers } from "ethers";
 import { useSigner } from "./useSigner"
-import { erc1155address, erc721address, nftmarketaddress } from "../../config";
+import { NFTSTORAGETOKEN, erc1155address, erc721address, nftmarketaddress } from "../../config";
 import NFTMarket from '../../../server/artifacts/contracts/NFTMarket.sol/NFTMarket.json'
 import ERC721NFT from '../../../server/artifacts/contracts/ERC721.sol/ERC721NFT.json'
 import ERC1155NFT from '../../../server/artifacts/contracts/ERC1155.sol/ERC1155NFT.json'
-import { IItem } from "@/types/nft";
+import { IFormInput, IItem } from "@/types/nft";
 import axios from "axios";
 import { ipfsToHTTPS } from "@/helpers/ipfsToHTTPS";
 import { INFURALINK } from "../../config";
+import { NFTStorage } from "nft.storage";
 
 export const useMarket = () => {
+    const client = new NFTStorage({ token: NFTSTORAGETOKEN });
     const {signer} = useSigner()
     const marketContract = new ethers.Contract(
         nftmarketaddress,
@@ -41,7 +43,6 @@ export const useMarket = () => {
               if (Number(i.tokenType) === 1) {
                 tokenUri = await tokenContractERC721.tokenURI(i.tokenId);
                 owner = await tokenContractERC721.ownerOf(i.tokenId);
-                console.log(owner);
                 amount = 1;
               } else {
                 tokenUri = await tokenContractERC1155.uri(i.tokenId);
@@ -106,7 +107,10 @@ export const useMarket = () => {
                 tokenUri = await tokenContractERC1155.uri(i.tokenId);
               }
 
-              if(tokenUri === '') return {}
+              // if(tokenUri === '') {
+              //   console.log(i)
+              //   return {}
+              // }
               const meta = await axios.get(ipfsToHTTPS(tokenUri));
               let price = ethers.formatUnits(i.price.toString(), "ether");
 
@@ -172,11 +176,82 @@ export const useMarket = () => {
         transaction = await contract.listItem(
           tokenId,
           ethers.parseUnits(price, "ether"),
-          amount
+          Number(amount)
         );
         await transaction.wait();
       }
     }
 
-    return {loadNft, loadMarketNfts, BuyNft, listNft}
+
+    const create721 = async(data: IFormInput) => {
+      const imageFile = data.image[0];
+      const name = data.name;
+      const description = data.description;
+  
+      const metadata = await client.store({
+        name,
+        description,
+        image: imageFile,
+      });
+  
+      let contract = new ethers.Contract(erc721address, ERC721NFT.abi, signer);
+  
+      const tokenCreatedPromise = new Promise((resolve) => {
+        contract.once("TokenCreated", (itemId) => {
+          resolve(itemId);
+        });
+      });
+    
+      let transaction = await contract.createToken(metadata.url);
+      const tokenId = await tokenCreatedPromise;
+    
+      await transaction.wait();
+    
+      const price = ethers.parseUnits(data.price, "ether");
+    
+      transaction = await contract.setApprovalForAll(nftmarketaddress, true);
+      await transaction.wait();
+    
+      contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
+    
+      transaction = await contract.createItem(erc721address, tokenId, price, 1);
+      await transaction.wait();
+    }
+
+    const create1155 = async(data: IFormInput) => {
+      const imageFile = data.image[0];
+      const name = data.name;
+      const description = data.description;
+  
+      const metadata = await client.store({
+        name,
+        description,
+        image: imageFile,
+      });
+  
+      let contract = new ethers.Contract(erc1155address, ERC1155NFT.abi, signer);
+  
+      const tokenCreatedPromise = new Promise((resolve) => {
+        contract.once("TokenCreated", (itemId) => {
+          resolve(itemId);
+        });
+      });
+    
+      let transaction = await contract.createToken(metadata.url, data.amount);
+      const tokenId = await tokenCreatedPromise;
+    
+      await transaction.wait();
+    
+      const price = ethers.parseUnits(data.price, "ether");
+    
+      transaction = await contract.setApprovalForAll(nftmarketaddress, true);
+      await transaction.wait();
+    
+      contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
+    
+      transaction = await contract.createItem(erc1155address, tokenId, price, data.amount);
+      await transaction.wait();
+    }
+
+    return {loadNft, loadMarketNfts, BuyNft, listNft, create721, create1155}
 }

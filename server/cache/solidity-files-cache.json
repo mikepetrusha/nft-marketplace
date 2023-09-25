@@ -369,43 +369,6 @@
         "ERC165"
       ]
     },
-    "C:\\Users\\User\\Desktop\\Files\\nft-marketplace\\server\\node_modules\\@openzeppelin\\contracts\\token\\ERC1155\\IERC1155.sol": {
-      "lastModificationDate": 1691760745145,
-      "contentHash": "93aa9af4f5d2d2095a71ccde917038bb",
-      "sourceName": "@openzeppelin/contracts/token/ERC1155/IERC1155.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "../../utils/introspection/IERC165.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IERC1155"
-      ]
-    },
     "C:\\Users\\User\\Desktop\\Files\\nft-marketplace\\server\\node_modules\\@openzeppelin\\contracts\\token\\ERC1155\\IERC1155Receiver.sol": {
       "lastModificationDate": 1691760745153,
       "contentHash": "9f8822b72fe2702979e40160cb6d9636",
@@ -441,6 +404,43 @@
       ],
       "artifacts": [
         "IERC1155Receiver"
+      ]
+    },
+    "C:\\Users\\User\\Desktop\\Files\\nft-marketplace\\server\\node_modules\\@openzeppelin\\contracts\\token\\ERC1155\\IERC1155.sol": {
+      "lastModificationDate": 1691760745145,
+      "contentHash": "93aa9af4f5d2d2095a71ccde917038bb",
+      "sourceName": "@openzeppelin/contracts/token/ERC1155/IERC1155.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../../utils/introspection/IERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC1155"
       ]
     },
     "C:\\Users\\User\\Desktop\\Files\\nft-marketplace\\server\\node_modules\\@openzeppelin\\contracts\\token\\ERC1155\\extensions\\IERC1155MetadataURI.sol": {
@@ -853,8 +853,8 @@
       ]
     },
     "C:\\Users\\User\\Desktop\\Files\\nft-marketplace\\server\\contracts\\NFTMarket.sol": {
-      "lastModificationDate": 1695374217083,
-      "contentHash": "e4b52aa216b4dea888527d5405f95c28",
+      "lastModificationDate": 1695656807283,
+      "contentHash": "e0ae5da45a1ece2833e95d7f08ffbf2e",
       "sourceName": "contracts/NFTMarket.sol",
       "solcConfig": {
         "version": "0.8.19",

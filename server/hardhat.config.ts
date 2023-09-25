@@ -9,7 +9,7 @@ const config: HardhatUserConfig = {
     sepolia: {
       url: "https://sepolia.infura.io/v3/9eac74003e914d29abec44e635b26fb4",
       accounts: [
-        "6eb252f13a92f50a03f8f4adcbad6d3413cff1012ca3d1313f4233b3dc8dbf8c",
+        "0bea7164a83231263bb48c4918ea9f7dcd3123fc465574848ece0b5129a0d32f",
       ],
     },
   },

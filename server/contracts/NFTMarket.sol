@@ -124,15 +124,6 @@ contract NFTMarket is
         idToMarketItem[itemId].price = price;
         idToMarketItem[itemId].amount = amount;
 
-        if (idToMarketItem[itemId].tokenType == TokenType.ERC1155) {
-            createItem(
-                idToMarketItem[itemId].assetContract,
-                idToMarketItem[itemId].tokenId,
-                idToMarketItem[itemId].price,
-                idToMarketItem[itemId].amount
-            );
-        }
-
         transferListingTokens(
             idToMarketItem[itemId].seller,
             address(this),
