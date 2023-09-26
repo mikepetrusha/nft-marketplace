@@ -112,6 +112,7 @@ contract NFTMarket is
             tokenType,
             amount
         );
+        _itemsSold.increment();
     }
 
     function listItem(uint itemId, uint price, uint amount) public {
@@ -119,17 +120,20 @@ contract NFTMarket is
         require(itemId > 0, "Invalid token ID");
         require(amount > 0, "Amount must be greater than 0");
 
+        if (idToMarketItem[itemId].tokenType == TokenType.ERC1155) {
+            createItem(
+                idToMarketItem[itemId].assetContract,
+                idToMarketItem[itemId].tokenId,
+                idToMarketItem[itemId].price,
+                idToMarketItem[itemId].amount
+            );
+        }
+
         idToMarketItem[itemId].sold = false;
         idToMarketItem[itemId].seller = msg.sender;
         idToMarketItem[itemId].price = price;
         idToMarketItem[itemId].amount = amount;
-
-        transferListingTokens(
-            idToMarketItem[itemId].seller,
-            address(this),
-            amount,
-            idToMarketItem[itemId]
-        );
+        _itemsSold.decrement();
     }
 
     function buyItem(uint itemId, uint amount) public payable nonReentrant {
@@ -140,7 +144,7 @@ contract NFTMarket is
 
         payable(idToMarketItem[itemId].seller).transfer(msg.value);
         transferListingTokens(
-            address(this),
+            idToMarketItem[itemId].seller,
             msg.sender,
             amount,
             idToMarketItem[itemId]

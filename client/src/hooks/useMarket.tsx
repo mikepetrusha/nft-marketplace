@@ -107,10 +107,6 @@ export const useMarket = () => {
                 tokenUri = await tokenContractERC1155.uri(i.tokenId);
               }
 
-              // if(tokenUri === '') {
-              //   console.log(i)
-              //   return {}
-              // }
               const meta = await axios.get(ipfsToHTTPS(tokenUri));
               let price = ethers.formatUnits(i.price.toString(), "ether");
 
