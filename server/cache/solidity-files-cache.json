@@ -853,7 +853,7 @@
       ]
     },
     "C:\\Users\\User\\Desktop\\Files\\nft-marketplace\\server\\contracts\\NFTMarket.sol": {
-      "lastModificationDate": 1695733186192,
+      "lastModificationDate": 1697538217823,
       "contentHash": "a9dcc28b0a6625aacd6c81a88470cf1e",
       "sourceName": "contracts/NFTMarket.sol",
       "solcConfig": {
@@ -1005,6 +1005,43 @@
         "EnumerableSet"
       ]
     },
+    "C:\\Users\\User\\Desktop\\Files\\nft-marketplace\\server\\node_modules\\@openzeppelin\\contracts\\access\\IAccessControlEnumerable.sol": {
+      "lastModificationDate": 1691760745082,
+      "contentHash": "4e71cc90682e109e999ce2bd329f6572",
+      "sourceName": "@openzeppelin/contracts/access/IAccessControlEnumerable.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IAccessControl.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IAccessControlEnumerable"
+      ]
+    },
     "C:\\Users\\User\\Desktop\\Files\\nft-marketplace\\server\\node_modules\\@openzeppelin\\contracts\\access\\AccessControl.sol": {
       "lastModificationDate": 1691760744933,
       "contentHash": "a2b1ec38a8dad325a596f926890772b8",
@@ -1043,43 +1080,6 @@
       ],
       "artifacts": [
         "AccessControl"
-      ]
-    },
-    "C:\\Users\\User\\Desktop\\Files\\nft-marketplace\\server\\node_modules\\@openzeppelin\\contracts\\access\\IAccessControlEnumerable.sol": {
-      "lastModificationDate": 1691760745082,
-      "contentHash": "4e71cc90682e109e999ce2bd329f6572",
-      "sourceName": "@openzeppelin/contracts/access/IAccessControlEnumerable.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "./IAccessControl.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IAccessControlEnumerable"
       ]
     },
     "C:\\Users\\User\\Desktop\\Files\\nft-marketplace\\server\\node_modules\\@openzeppelin\\contracts\\access\\IAccessControl.sol": {

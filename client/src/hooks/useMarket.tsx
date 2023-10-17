@@ -203,14 +203,12 @@ export const useMarket = () => {
     
       await transaction.wait();
     
-      const price = ethers.parseUnits(data.price, "ether");
-    
       transaction = await contract.setApprovalForAll(nftmarketaddress, true);
       await transaction.wait();
     
       contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
     
-      transaction = await contract.createItem(erc721address, tokenId, price, 1);
+      transaction = await contract.createItem(erc721address, tokenId, 1, 1);
       await transaction.wait();
     }
 
@@ -238,14 +236,12 @@ export const useMarket = () => {
     
       await transaction.wait();
     
-      const price = ethers.parseUnits(data.price, "ether");
-    
       transaction = await contract.setApprovalForAll(nftmarketaddress, true);
       await transaction.wait();
     
       contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
     
-      transaction = await contract.createItem(erc1155address, tokenId, price, data.amount);
+      transaction = await contract.createItem(erc1155address, tokenId, 1, data.amount);
       await transaction.wait();
     }
 

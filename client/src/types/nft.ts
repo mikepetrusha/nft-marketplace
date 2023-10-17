@@ -14,7 +14,7 @@ export interface IItem {
 export interface IFormInput {
   name: string;
   description: string;
-  price: string;
+  price?: string;
   image: File[];
   amount?: string;
 }

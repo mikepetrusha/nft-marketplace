@@ -30,7 +30,6 @@ export default function CreateItem() {
       <form onSubmit={handleSubmit(createSale)}>
         <Input type="text" placeholder="Name" register={register} name='name'/>
         <Input type="text" placeholder="Description" register={register} name='description'/>
-        <Input type="text" placeholder="Price" register={register} name='price'/>
         <Input type="text" placeholder="Amount" register={register} name='amount'/>
         <input type="file" className="my-4" {...register('image')} />
 
