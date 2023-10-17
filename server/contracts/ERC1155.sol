@@ -9,9 +9,7 @@ contract ERC1155NFT is ERC1155URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    event TokenCreated (
-        uint indexed itemId
-    );
+    event TokenCreated(uint indexed itemId);
 
     constructor() ERC1155("") {}
 

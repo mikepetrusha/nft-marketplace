@@ -47,7 +47,11 @@ export const SignerProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const contextValue = {signer, address, loading, connectWallet}
+  const contextValue = { signer, address, loading, connectWallet };
 
-  return <SignerContext.Provider value={contextValue}>{children}</SignerContext.Provider>
+  return (
+    <SignerContext.Provider value={contextValue}>
+      {children}
+    </SignerContext.Provider>
+  );
 };

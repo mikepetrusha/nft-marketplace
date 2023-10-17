@@ -10,9 +10,7 @@ contract ERC721NFT is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    event TokenCreated (
-        uint indexed itemId
-    );
+    event TokenCreated(uint indexed itemId);
 
     constructor() ERC721("MyNFT", "MNFT") {}
 
@@ -25,4 +23,3 @@ contract ERC721NFT is ERC721URIStorage {
         emit TokenCreated(newItemId);
     }
 }
-

@@ -1,8 +1,8 @@
 import { useSigner } from "@/hooks/useSigner";
-import {AddressAvatar} from "./AddressAvatar";
+import { AddressAvatar } from "./AddressAvatar";
 
 export const ConnectButton = () => {
-  const {address, loading, connectWallet} = useSigner();
+  const { address, loading, connectWallet } = useSigner();
 
   if (address) return <AddressAvatar address={address} />;
   return (

@@ -1,6 +1,6 @@
-export const nftmarketaddress = "0xF3d0d5B3763B3F4FCE950D7b1a9A31508d33F47D";
-export const erc721address = "0x7D65E015B59bad34672399aC0bEc7539126BbA5e";
-export const erc1155address = "0x88BF042f52877Dd993Ef3CdA4b6396bA1563461C";
+export const nftmarketaddress = "0x5B9964E7Dd66912CeB8196f40fF773016e85363D";
+export const erc721address = "0xBAa2B5782BE775bDA5bA4853F5cc455aD3661fb0";
+export const erc1155address = "0xB63F1aC5EbA2251f0C8A612C0a468a6eEb8B38Ae";
 export const INFURALINK =
   "https://sepolia.infura.io/v3/9eac74003e914d29abec44e635b26fb4";
 export const NFTSTORAGETOKEN = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDEyQ0NCZWQ5Zjc5NEREODU3NkNGOEVmOWE4OTk4QTM2NUIyMjgyYjUiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY5MDM4MDY1MzY0MSwibmFtZSI6Im5mdC1tYXJrZXRwbGFjZSJ9.rOKCZcZc7w4CWYac7_wQNigIuihiWhwxF-NVY7bnUYE`;
