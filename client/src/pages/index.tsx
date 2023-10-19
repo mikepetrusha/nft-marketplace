@@ -63,6 +63,9 @@ export default function Home() {
                 Token Type: {nft.tokenType === 0 ? "ERC1155" : "ERC721"}
               </TextField>
               <TextField>Amount: {nft.amount}</TextField>
+              <TextField>
+                ImageURL: {nft.image.slice(100, nft.image.length)}
+              </TextField>
             </div>
             <div className="p-4 bg-black">
               <p className="text-2xl mb-4 font-bold text-white">

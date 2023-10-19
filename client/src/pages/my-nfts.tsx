@@ -3,9 +3,10 @@ import { IItem } from "@/types/nft";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { useMarket } from "@/hooks/useMarket";
-import { useFieldArray, useForm } from "react-hook-form";
+// import { useFieldArray, useForm } from "react-hook-form";
 import { Button } from "@/components/Button";
 import { TextField } from "@/components/TextField";
+import { SellDialog } from "@/components/SellDialog";
 
 type FormValues = {
   card: {
@@ -17,13 +18,13 @@ type FormValues = {
 export default function MyNFTs() {
   const [nfts, setNfts] = useState<IItem[]>([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
-  const router = useRouter();
+  // const router = useRouter();
   const { loadNft, listNft } = useMarket();
-  const { register, handleSubmit, control } = useForm<FormValues>();
-  const {} = useFieldArray<FormValues>({
-    control,
-    name: "card",
-  });
+  // const { register, handleSubmit, control } = useForm<FormValues>();
+  // const {} = useFieldArray<FormValues>({
+  //   control,
+  //   name: "card",
+  // });
 
   useEffect(() => {
     const loadNfts = async () => {
@@ -40,17 +41,17 @@ export default function MyNFTs() {
     loadNfts();
   }, []);
 
-  const listNFT = async (nft: any, price: string, amount: string) => {
-    setLoadingState("not-loaded");
-    try {
-      await listNft(nft, price, amount);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoadingState("loaded");
-    }
-    router.push("/");
-  };
+  // const listNFT = async (nft: any, price: string, amount: string) => {
+  //   setLoadingState("not-loaded");
+  //   try {
+  //     await listNft(nft, price, amount);
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setLoadingState("loaded");
+  //   }
+  //   router.push("/");
+  // };
 
   if (loadingState === "loaded" && !nfts.length)
     return <h1 className="py-10 px-20 text-3xl">No assets owned</h1>;
@@ -79,8 +80,11 @@ export default function MyNFTs() {
                 Token Type: {nft.tokenType === 0 ? "ERC1155" : "ERC721"}
               </TextField>
               <TextField>Amount: {nft.amount}</TextField>
+              <TextField>
+                ImageURL: {nft.image.slice(100, nft.image.length)}
+              </TextField>
             </div>
-            <form
+            {/* <form
               onSubmit={handleSubmit((data) =>
                 listNFT(nft, data.card[index].price, data.card[index].amount)
               )}
@@ -101,7 +105,8 @@ export default function MyNFTs() {
               />
 
               <Button loadingState={loadingState} name="Sell" />
-            </form>
+            </form> */}
+            <SellDialog nft={nft} index={index} />
           </div>
         ))}
       </div>

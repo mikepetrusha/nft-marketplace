@@ -77,7 +77,9 @@ export const useMarket = () => {
     const filteredItems = items.filter((item, index, self) => {
       return (
         item.amount > 0 &&
-        self.findIndex((i) => i.tokenId === item.tokenId) === index
+        self.findIndex(
+          (i) => i.tokenId === item.tokenId && i.tokenType === item.tokenType
+        ) === index
       );
     });
 
@@ -113,8 +115,6 @@ export const useMarket = () => {
         } else {
           tokenUri = await tokenContractERC1155.uri(i.tokenId);
         }
-
-        console.log(tokenUri);
 
         const meta = await axios.get(ipfsToHTTPS(tokenUri));
         let price = ethers.formatUnits(i.price.toString(), "ether");
@@ -178,7 +178,7 @@ export const useMarket = () => {
       contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
 
       transaction = await contract.listItem(
-        tokenId,
+        nft.itemId,
         ethers.parseUnits(price, "ether"),
         Number(amount)
       );
