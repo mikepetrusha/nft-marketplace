@@ -120,6 +120,11 @@ contract NFTMarket is
         require(itemId > 0, "Invalid token ID");
         require(amount > 0, "Amount must be greater than 0");
 
+        idToMarketItem[itemId].sold = false;
+        idToMarketItem[itemId].seller = msg.sender;
+        idToMarketItem[itemId].price = price;
+        idToMarketItem[itemId].amount = amount;
+
         if (idToMarketItem[itemId].tokenType == TokenType.ERC1155) {
             createItem(
                 idToMarketItem[itemId].assetContract,
@@ -129,10 +134,6 @@ contract NFTMarket is
             );
         }
 
-        idToMarketItem[itemId].sold = false;
-        idToMarketItem[itemId].seller = msg.sender;
-        idToMarketItem[itemId].price = price;
-        idToMarketItem[itemId].amount = amount;
         _itemsSold.decrement();
     }
 

@@ -1,8 +1,8 @@
-import { useSigner } from "@/hooks/useSigner";
-import {AddressAvatar} from "./AddressAvatar";
+import { useSigner } from '@/hooks/useSigner';
+import { AddressAvatar } from './AddressAvatar';
 
 export const ConnectButton = () => {
-  const {address, loading, connectWallet} = useSigner();
+  const { address, loading, connectWallet } = useSigner();
 
   if (address) return <AddressAvatar address={address} />;
   return (
@@ -11,7 +11,7 @@ export const ConnectButton = () => {
       onClick={connectWallet}
       disabled={loading}
     >
-      {loading ? "Loading..." : "Connect wallet"}
+      {loading ? 'Loading...' : 'Connect wallet'}
     </button>
   );
 };

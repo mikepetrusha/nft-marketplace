@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 import Blockies from 'react-blockies';
 
 type AddressAvatarProps = {
@@ -6,10 +6,10 @@ type AddressAvatarProps = {
 };
 
 const minifyAddress = (address: string) => {
-    const start = address.substring(0, 5);
-    const end = address.substring(address.length - 4);
-    return `${start}...${end}`;
-  };
+  const start = address.substring(0, 5);
+  const end = address.substring(address.length - 4);
+  return `${start}...${end}`;
+};
 
 export const AddressAvatar = ({ address }: AddressAvatarProps) => {
   const shortAddress = useMemo(() => minifyAddress(address), [address]);

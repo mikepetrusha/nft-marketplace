@@ -9,12 +9,13 @@ export interface IItem {
   description: string;
   tokenType: number;
   amount: number;
+  fileType: string;
 }
 
 export interface IFormInput {
   name: string;
   description: string;
-  price: string;
+  price?: string;
   image: File[];
   amount?: string;
 }
