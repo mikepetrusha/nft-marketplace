@@ -1,12 +1,6 @@
-import { JsonRpcSigner, ethers } from "ethers";
-import Web3Modal from "web3modal";
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { JsonRpcSigner, ethers } from 'ethers';
+import Web3Modal from 'web3modal';
+import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 
 type SignerContextType = {
   signer?: JsonRpcSigner;
@@ -27,7 +21,7 @@ export const SignerProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const web3Modal = new Web3Modal();
     if (web3Modal.cachedProvider) connectWallet();
-    window.ethereum.on("accountChanged", connectWallet);
+    window.ethereum.on('accountChanged', connectWallet);
   }, []);
 
   const connectWallet = async () => {
@@ -49,9 +43,5 @@ export const SignerProvider = ({ children }: { children: ReactNode }) => {
 
   const contextValue = { signer, address, loading, connectWallet };
 
-  return (
-    <SignerContext.Provider value={contextValue}>
-      {children}
-    </SignerContext.Provider>
-  );
+  return <SignerContext.Provider value={contextValue}>{children}</SignerContext.Provider>;
 };

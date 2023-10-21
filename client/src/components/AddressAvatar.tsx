@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import Blockies from "react-blockies";
+import { useMemo } from 'react';
+import Blockies from 'react-blockies';
 
 type AddressAvatarProps = {
   address: string;

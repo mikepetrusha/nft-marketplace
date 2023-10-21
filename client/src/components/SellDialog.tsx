@@ -1,9 +1,9 @@
-import { useMarket } from "@/hooks/useMarket";
-import { useRef, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { Button } from "./Button";
-import { useRouter } from "next/router";
-import { Input } from "./Input";
+import { useMarket } from '@/hooks/useMarket';
+import { useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Button } from './Button';
+import { useRouter } from 'next/router';
+import { Input } from './Input';
 
 type FormValues = {
   price: string;
@@ -12,14 +12,13 @@ type FormValues = {
 
 interface sellDialogProps {
   nft: any;
-  index: number;
 }
 
-export const SellDialog = ({ nft, index }: sellDialogProps) => {
+export const SellDialog = ({ nft }: sellDialogProps) => {
   const modalRef = useRef<HTMLDialogElement | null>(null);
   const { listNft } = useMarket();
   const { register, handleSubmit } = useForm<FormValues>();
-  const [loadingState, setLoadingState] = useState("not-loaded");
+  const [loadingState, setLoadingState] = useState('loaded');
   const router = useRouter();
 
   const openModal = () => {
@@ -35,59 +34,30 @@ export const SellDialog = ({ nft, index }: sellDialogProps) => {
   };
 
   const listNFT = async (nft: any, price: string, amount: string) => {
-    console.log("NFT to sell: ", nft);
-    setLoadingState("not-loaded");
+    setLoadingState('not-loaded');
     try {
       await listNft(nft, price, amount);
     } catch (error) {
       console.log(error);
     } finally {
-      setLoadingState("loaded");
+      setLoadingState('loaded');
     }
-    router.push("/");
+    router.push('/');
   };
 
   return (
     <div>
-      <button className="btn" onClick={openModal}>
-        Open Modal
-      </button>
+      <Button name="Sell Item" loadingState="loaded" className="btn" onClick={openModal} />
 
       <dialog ref={modalRef} className="modal">
         <div className="modal-box">
           <form
-            onSubmit={handleSubmit((data) =>
-              listNFT(nft, data.price, data.amount)
-            )}
+            onSubmit={handleSubmit((data) => listNFT(nft, data.price, data.amount))}
             className=""
           >
-            {/* <input
-              type="text"
-              placeholder="Price"
-              className="border rounded py-2 px-4"
-              {...register(`card.${index}.price`)}
-            />
-
-            <input
-              type="text"
-              placeholder="Amount"
-              className="mt-3 border rounded py-2 px-4"
-              {...register(`card.${index}.amount`)}
-            /> */}
-
-            <Input
-              type="text"
-              placeholder="Price"
-              register={register}
-              name="price"
-            />
-
-            <Input
-              type="text"
-              placeholder="Amount"
-              register={register}
-              name="amount"
-            />
+            <h2 className="text-2xl">Sell item</h2>
+            <Input type="text" placeholder="Price" register={register} name="price" />
+            <Input type="text" placeholder="Amount" register={register} name="amount" />
 
             <Button loadingState={loadingState} name="Sell" />
           </form>

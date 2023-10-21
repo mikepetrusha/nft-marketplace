@@ -1,15 +1,15 @@
-import Link from "next/link";
-import { routes } from "@/constants/Routes";
-import { ConnectButton } from "./ConnectionButton";
+import Link from 'next/link';
+import { routes } from '@/constants/Routes';
+import { ConnectButton } from './ConnectionButton';
 
 export const TopBar = () => {
   return (
     <>
       <div className="flex justify-around">
-        <p className="text-4xl font-bold">Marketplace</p>
+        <p className="text-4xl font-bold">Tokenezation Platform</p>
         <ConnectButton />
       </div>
-      <div className="flex mt-4 justify-center">
+      <div className="mt-4 flex justify-center">
         {routes.map((route) => (
           <Link
             key={route.href}

@@ -1,7 +1,3 @@
 export const TextField = ({ children }: any) => {
-  return (
-    <p className="text-gray-400 overflow-hidden overflow-ellipsis text-left">
-      {...children}
-    </p>
-  );
+  return <p className="overflow-hidden overflow-ellipsis text-left text-gray-400">{...children}</p>;
 };

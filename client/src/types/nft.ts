@@ -9,6 +9,7 @@ export interface IItem {
   description: string;
   tokenType: number;
   amount: number;
+  fileType: string;
 }
 
 export interface IFormInput {
