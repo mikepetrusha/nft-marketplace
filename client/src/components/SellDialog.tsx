@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { Button } from './Button';
 import { useRouter } from 'next/router';
 import { Input } from './Input';
+import { IItem } from '@/types/nft';
 
 type FormValues = {
   price: string;
@@ -11,7 +12,7 @@ type FormValues = {
 };
 
 interface sellDialogProps {
-  nft: any;
+  nft: IItem;
 }
 
 export const SellDialog = ({ nft }: sellDialogProps) => {
@@ -33,7 +34,7 @@ export const SellDialog = ({ nft }: sellDialogProps) => {
     }
   };
 
-  const listNFT = async (nft: any, price: string, amount: string) => {
+  const listNFT = async (nft: IItem, price: string, amount: string) => {
     setLoadingState('not-loaded');
     try {
       await listNft(nft, price, amount);

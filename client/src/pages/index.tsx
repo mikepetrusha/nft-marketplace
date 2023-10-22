@@ -27,7 +27,7 @@ export default function Home() {
     loadNFTs();
   }, []);
 
-  async function buyNft(nft: any) {
+  async function buyNft(nft: IItem) {
     setLoadingState('not-loaded');
     try {
       await BuyNft(nft);
