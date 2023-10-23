@@ -32,6 +32,13 @@ export const SignerProvider = ({ children }: { children: ReactNode }) => {
       const provider = new ethers.BrowserProvider(intrance);
       const signer = await provider.getSigner();
       const address = await signer.getAddress();
+
+      const network = await provider.getNetwork();
+      if (network.name !== 'sepolia') {
+        alert('Please switch to the Sepolia network.');
+        throw new Error('Please switch to the Sepolia network.');
+      }
+
       setSigner(signer);
       setAddress(address);
     } catch (error) {

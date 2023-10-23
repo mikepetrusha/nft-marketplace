@@ -30,7 +30,11 @@ export default function CreateItem() {
       <form onSubmit={handleSubmit(createSale)}>
         <Input type="text" placeholder="Name" register={register} name="name" />
         <Input type="text" placeholder="Description" register={register} name="description" />
-        <input type="file" className="my-4" {...register('image')} />
+        <input
+          type="file"
+          className="file-input file-input-bordered file-input-primary my-4 w-full"
+          {...register('image')}
+        />
 
         <Button loadingState={loadingState} name="Create NFT" />
       </form>
