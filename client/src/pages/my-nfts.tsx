@@ -32,10 +32,7 @@ export default function MyNFTs() {
     <div className="max-w-7xl px-4">
       <div className="grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2 lg:grid-cols-4">
         {nfts.map((nft, index) => (
-          <div
-            className="card glass overflow-hidden rounded-lg border border-gray-500 shadow-xl ring-1 ring-slate-900/5"
-            key={index}
-          >
+          <div className="overflow-hidden rounded-xl border border-gray-500 shadow" key={index}>
             <Image
               className="h-80 w-full object-cover object-center"
               src={nft.image}
@@ -43,10 +40,8 @@ export default function MyNFTs() {
               height={500}
               alt="image"
             />
-            <div className="card-body p-4">
-              <p className="card-title overflow-hidden overflow-ellipsis text-2xl font-semibold">
-                {nft.name}
-              </p>
+            <div className="p-4">
+              <p className="overflow-hidden overflow-ellipsis text-2xl font-semibold">{nft.name}</p>
               <TextField>Description: {nft.description}</TextField>
               <TextField>Token Type: {nft.tokenType === 0 ? 'ERC1155' : 'ERC721'}</TextField>
               <TextField>Amount: {nft.amount}</TextField>
