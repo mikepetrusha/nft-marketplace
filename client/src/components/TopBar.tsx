@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import { routes } from '@/constants/Routes';
-import { ConnectButton } from './ConnectionButton';
+import { ConnectButton } from './ui/ConnectionButton';
 
 export const TopBar = () => {
   return (
     <>
       <div className="flex justify-around">
-        <p className="text-4xl font-bold">Tokenezation Platform</p>
+        <p className="text-4xl font-normal">Tokenization Platform</p>
         <ConnectButton />
       </div>
       <div className="mt-4 flex justify-center">

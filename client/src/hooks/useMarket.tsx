@@ -9,7 +9,26 @@ import axios from 'axios';
 import { ipfsToHTTPS } from '@/helpers/ipfsToHTTPS';
 import { INFURALINK } from '../../config';
 import { NFTStorage } from 'nft.storage';
+import { txtIcon, pdfIcon, docIcon, audioIcon, textIcon } from '../../public/icons';
 
+const selectIcon = (fileType: string, image: string) => {
+  const icons: any = {
+    'text/plain': txtIcon,
+    'application/pdf': pdfIcon,
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': docIcon,
+    'application/msword': docIcon,
+    'application/json': textIcon,
+    'audio/mpeg': audioIcon,
+  };
+
+  const icon = icons[fileType];
+
+  if (icon) {
+    return icon;
+  } else {
+    return ipfsToHTTPS(image);
+  }
+};
 export const useMarket = () => {
   const client = new NFTStorage({ token: NFTSTORAGETOKEN });
   const { signer } = useSigner();
@@ -44,7 +63,7 @@ export const useMarket = () => {
           tokenId: Number(i.tokenId),
           seller: i.seller,
           owner: i.owner,
-          image: ipfsToHTTPS(meta.data.image),
+          image: selectIcon(meta.data.fileType, meta.data.image),
           name: meta.data.name,
           description: meta.data.description,
           tokenType: Number(i.tokenType),
@@ -93,7 +112,7 @@ export const useMarket = () => {
           tokenId: Number(i.tokenId),
           seller: i.seller,
           owner: i.owner,
-          image: ipfsToHTTPS(meta.data.image),
+          image: selectIcon(meta.data.fileType, meta.data.image),
           name: meta.data.name,
           description: meta.data.description,
           tokenType: Number(i.tokenType),
@@ -115,7 +134,7 @@ export const useMarket = () => {
     await transaction.wait();
   };
 
-  const listNft = async (nft: any, price: string, amount: string) => {
+  const listNft = async (nft: any, price: number, amount: number) => {
     const tokenId = nft.tokenId;
 
     if (Number(nft.tokenType) === 1) {
@@ -125,7 +144,11 @@ export const useMarket = () => {
 
       contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
 
-      transaction = await contract.listItem(nft.itemId, ethers.parseUnits(price, 'ether'), 1);
+      transaction = await contract.listItem(
+        nft.itemId,
+        ethers.parseUnits(price.toString(), 'ether'),
+        1,
+      );
       await transaction.wait();
     } else {
       let contract = new ethers.Contract(erc1155address, ERC1155NFT.abi, signer);
@@ -136,7 +159,7 @@ export const useMarket = () => {
 
       transaction = await contract.listItem(
         nft.itemId,
-        ethers.parseUnits(price, 'ether'),
+        ethers.parseUnits(price.toString(), 'ether'),
         Number(amount),
       );
       await transaction.wait();
@@ -178,14 +201,15 @@ export const useMarket = () => {
   };
 
   const create1155 = async (data: IFormInput) => {
-    const imageFile = data.image[0];
+    const uploadedFile = data.image[0];
     const name = data.name;
     const description = data.description;
 
     const metadata = await client.store({
       name,
       description,
-      image: imageFile,
+      image: uploadedFile,
+      fileType: uploadedFile.type,
     });
 
     let contract = new ethers.Contract(erc1155address, ERC1155NFT.abi, signer);

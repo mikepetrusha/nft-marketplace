@@ -2,16 +2,8 @@ import { useEffect, useState } from 'react';
 import { IItem } from '@/types/nft';
 import Image from 'next/image';
 import { useMarket } from '@/hooks/useMarket';
-import { Button } from '@/components/Button';
-import { TextField } from '@/components/TextField';
+import { TextField } from '@/components/ui/TextField';
 import { SellDialog } from '@/components/SellDialog';
-
-type FormValues = {
-  card: {
-    price: string;
-    amount: string;
-  }[];
-};
 
 export default function MyNFTs() {
   const [nfts, setNfts] = useState<IItem[]>([]);
@@ -40,10 +32,7 @@ export default function MyNFTs() {
     <div className="max-w-7xl px-4">
       <div className="grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2 lg:grid-cols-4">
         {nfts.map((nft, index) => (
-          <div
-            className="overflow-hidden rounded-lg border border-gray-500 shadow-xl ring-1 ring-slate-900/5"
-            key={index}
-          >
+          <div className="overflow-hidden rounded-xl border border-gray-500 shadow" key={index}>
             <Image
               className="h-80 w-full object-cover object-center"
               src={nft.image}
@@ -56,7 +45,6 @@ export default function MyNFTs() {
               <TextField>Description: {nft.description}</TextField>
               <TextField>Token Type: {nft.tokenType === 0 ? 'ERC1155' : 'ERC721'}</TextField>
               <TextField>Amount: {nft.amount}</TextField>
-              <TextField>File Type: {nft.fileType}</TextField>
             </div>
 
             <SellDialog nft={nft} />
