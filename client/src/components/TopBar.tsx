@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { routes } from '@/constants/Routes';
-import { ConnectButton } from './ConnectionButton';
+import { ConnectButton } from './ui/ConnectionButton';
 
 export const TopBar = () => {
   return (

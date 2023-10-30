@@ -3,8 +3,8 @@ import { IItem } from '@/types/nft';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { useMarket } from '@/hooks/useMarket';
-import { TextField } from '@/components/TextField';
-import { Button } from '@/components/Button';
+import { TextField } from '@/components/ui/TextField';
+import { Button } from '@/components/ui/Button';
 
 export default function Home() {
   const [nfts, setNFTs] = useState<IItem[]>([]);

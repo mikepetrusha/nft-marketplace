@@ -134,7 +134,7 @@ export const useMarket = () => {
     await transaction.wait();
   };
 
-  const listNft = async (nft: any, price: string, amount: string) => {
+  const listNft = async (nft: any, price: number, amount: number) => {
     const tokenId = nft.tokenId;
 
     if (Number(nft.tokenType) === 1) {
@@ -144,7 +144,11 @@ export const useMarket = () => {
 
       contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
 
-      transaction = await contract.listItem(nft.itemId, ethers.parseUnits(price, 'ether'), 1);
+      transaction = await contract.listItem(
+        nft.itemId,
+        ethers.parseUnits(price.toString(), 'ether'),
+        1,
+      );
       await transaction.wait();
     } else {
       let contract = new ethers.Contract(erc1155address, ERC1155NFT.abi, signer);
@@ -155,7 +159,7 @@ export const useMarket = () => {
 
       transaction = await contract.listItem(
         nft.itemId,
-        ethers.parseUnits(price, 'ether'),
+        ethers.parseUnits(price.toString(), 'ether'),
         Number(amount),
       );
       await transaction.wait();

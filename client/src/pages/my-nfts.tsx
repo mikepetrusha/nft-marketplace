@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { IItem } from '@/types/nft';
 import Image from 'next/image';
 import { useMarket } from '@/hooks/useMarket';
-import { TextField } from '@/components/TextField';
+import { TextField } from '@/components/ui/TextField';
 import { SellDialog } from '@/components/SellDialog';
 
 export default function MyNFTs() {
