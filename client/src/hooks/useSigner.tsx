@@ -32,11 +32,18 @@ export const SignerProvider = ({ children }: { children: ReactNode }) => {
       const provider = new ethers.BrowserProvider(intrance);
       const signer = await provider.getSigner();
       const address = await signer.getAddress();
+      const chainId = 11155111;
 
       const network = await provider.getNetwork();
       if (network.name !== 'sepolia') {
-        alert('Please switch to the Sepolia network.');
-        throw new Error('Please switch to the Sepolia network.');
+        try {
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x' + chainId.toString(16) }],
+          });
+        } catch (switchError) {
+          console.log(switchError);
+        }
       }
 
       setSigner(signer);
